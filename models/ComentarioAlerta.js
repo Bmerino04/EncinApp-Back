@@ -1,6 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('sqlite::memory:');
-
+module.exports = (sequelize, DataTypes) => {
 const ComentarioAlerta = sequelize.define(
   'ComentarioAlerta',
   {
@@ -33,8 +31,9 @@ const ComentarioAlerta = sequelize.define(
     freezeTableName:true,
   },
 );
-
-// `sequelize.define` also returns the model
-console.log(ComentarioAlerta === sequelize.models.ComentarioAlerta
-
-); // true
+ComentarioAlerta.associate = (models) =>{
+ComentarioAlerta.belongsTo(Usuario, {foreignKey:'id_usuario'});
+ComentarioAlerta.belongsTo(PuntoMapa, {foreignKey:'id_punto_mapa'});
+};
+return ComentarioAlerta;
+}

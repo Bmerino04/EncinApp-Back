@@ -1,6 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('sqlite::memory:');
-
+module.exports = (sequelize, DataTypes) => {
 const Anuncio = sequelize.define(
   'Anuncio',
   {
@@ -49,8 +47,8 @@ const Anuncio = sequelize.define(
     freezeTableName:true,
   },
 );
-
-// `sequelize.define` also returns the model
-console.log(Anuncio === sequelize.models.Anuncio
-
-); // true
+Anuncio.associate = (models) =>{
+Anuncio.belongsTo(Usuario, {foreignKey:'id_usuario'});
+};
+return Anuncio;
+}

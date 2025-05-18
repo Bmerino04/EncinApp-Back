@@ -1,6 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('sqlite::memory:');
-
+module.exports = (sequelize, DataTypes) => {
 const Usuario = sequelize.define(
   'Usuario',
   {
@@ -42,5 +40,16 @@ const Usuario = sequelize.define(
   },
 );
 
-// `sequelize.define` also returns the model
-console.log(Usuario === sequelize.models.Usuario);
+Usuario.associate = (models) =>{
+  Usuario.hasMany(PuntoMapa,{foreignKey:'id_usuario'});
+  Usuario.hasMany(ComentarioAlerta,{foreignKey:'id_usuario'});
+  Usuario.hasMany(Anuncio,{foreignKey:'id_usuario'});
+
+  Usuario.belongsToMany(Permiso,{
+  through: 'usuario_permiso',
+  foreignKey: 'id_usuario',
+  otherKey: 'id_permiso',
+});
+};
+return Usuario;
+}

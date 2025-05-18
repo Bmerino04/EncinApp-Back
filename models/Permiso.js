@@ -1,6 +1,4 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('sqlite::memory:');
-
+module.exports = (sequelize, DataTypes) => {
 const Permiso = sequelize.define(
   'Permiso',
   {
@@ -21,8 +19,12 @@ const Permiso = sequelize.define(
     freezeTableName:true,
   },
 );
-
-// `sequelize.define` also returns the model
-console.log(Permiso === sequelize.models.Permiso
-
-); // true
+Permiso.associate = (models) =>{
+Permiso.belongsToMany(Usuario,{
+  through: 'usuario_permiso',
+  foreignKey: 'id_permiso',
+  otherKey: 'id_usuario',
+});
+};
+return Permiso;
+}
