@@ -4,46 +4,53 @@ const sequelize = new Sequelize('sqlite::memory:');
 const Anuncio = sequelize.define(
   'Anuncio',
   {
-    id: {
-      type: DataTypes.UUID,
+    id_anuncio: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement:true,
       allowNull: false,
-    },    
+    },     
     titulo: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(45),
       allowNull: false,
     },
     cuerpo: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: true,
     },
-    multimediaURL: {
-      type: DataTypes.STRING,
+    multimedia_url: {
+      type: DataTypes.STRING(1024),
       allowNull: true,
     },
-    tipoMultimedia: {
-      type: DataTypes.ENUM,
+    tipo_multimedia: {
+      type: DataTypes.ENUM('imagen', 'video'),
+      allowNull: true,
+    },
+    fecha_relacionada: {
+      type: DataTypes.DATE,
       allowNull: true,
     },
     direccion: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(45),
       allowNull: true,
     },    
-    fechaAsociada: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    }, 
-    fechaEmision: {
+    fecha_emision: {
       type: DataTypes.DATE,
       allowNull: false,
-    }        
-//claves foraneas??
+    },  
+    id_usuario: { //fk usuario
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },            
 },
   {
-    // Other model options go here
+    tableName:'anuncio',
+    timestamps: false,
+    freezeTableName:true,
   },
 );
 
 // `sequelize.define` also returns the model
-console.log(PuntoMapa === sequelize.models.PuntoMapa
+console.log(Anuncio === sequelize.models.Anuncio
 
 ); // true

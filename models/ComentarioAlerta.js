@@ -1,29 +1,40 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize('sqlite::memory:');
 
-const Anuncio = sequelize.define(
-  'Anuncio',
+const ComentarioAlerta = sequelize.define(
+  'ComentarioAlerta',
   {
-    id: {
-      type: DataTypes.UUID,
+    id_comentario: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement:true,
       allowNull: false,
-    },    
+    },     
     contenido: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
-    fechaEmision: {
+    fecha_emision: {
       type: DataTypes.DATE,
       allowNull: false,
-    }        
-//claves foraneas??
+    }, 
+    id_usuario: { //fk usuario
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },                
+    id_punto_mapa: { //fk punto mapa
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },  
 },
   {
-    // Other model options go here
+    tableName:'comentario_alerta',
+    timestamps: false,
+    freezeTableName:true,
   },
 );
 
 // `sequelize.define` also returns the model
-console.log(PuntoMapa === sequelize.models.PuntoMapa
+console.log(ComentarioAlerta === sequelize.models.ComentarioAlerta
 
 ); // true

@@ -1,25 +1,28 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize('sqlite::memory:');
 
-const Anuncio = sequelize.define(
-  'Anuncio',
+const Permiso = sequelize.define(
+  'Permiso',
   {
-    id: {
-      type: DataTypes.UUID,
+    id_permiso: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement:true,
       allowNull: false,
     },    
     nombre: {
       type: DataTypes.STRING,
       allowNull: false,
-    }       
-//claves foraneas??
+    },       
 },
   {
-    // Other model options go here
+    tableName:'permiso',
+    timestamps: false,
+    freezeTableName:true,
   },
 );
 
 // `sequelize.define` also returns the model
-console.log(PuntoMapa === sequelize.models.PuntoMapa
+console.log(Permiso === sequelize.models.Permiso
 
 ); // true

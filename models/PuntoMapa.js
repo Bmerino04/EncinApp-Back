@@ -14,7 +14,7 @@ const PuntoMapa = sequelize.define(
       type: DataTypes.ENUM('seguridad','salud','siniestro'),
       allowNull: false,
     },
-    fechaEmision: {
+    fecha_emision: {
       type: DataTypes.DATE,
       allowNull: false,
     },
@@ -37,7 +37,8 @@ const PuntoMapa = sequelize.define(
 },
   {
     tableName:'punto_mapa',
-    timestamps:false,
+    timestamps: false,
+    freezeTableName:true,
   },
 );
 
