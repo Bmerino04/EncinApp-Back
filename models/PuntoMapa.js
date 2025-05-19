@@ -9,7 +9,7 @@ const PuntoMapa = sequelize.define(
       allowNull: false,
     },   
     tipo: {
-      type: DataTypes.ENUM('seguridad','salud','siniestro'),
+      type: DataTypes.ENUM('siniestro', 'salud', 'seguridad', 'carabineros', 'hospital', 'cesfam', 'dideco', 'farmacia'),
       allowNull: false,
     },
     fecha_emision: {
@@ -28,10 +28,22 @@ const PuntoMapa = sequelize.define(
       type: DataTypes.STRING(45),
       allowNull: true,
     }, 
+    nombre: {
+      type: DataTypes.STRING(45),
+      allowNull: true,
+    },
+    estado_atendido: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+    estado_actividad: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
     id_usuario: { //fk usuario
       type: DataTypes.INTEGER,
       allowNull: false
-    }       
+    },       
 },
   {
     tableName:'punto_mapa',
