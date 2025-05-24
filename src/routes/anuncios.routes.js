@@ -1,4 +1,4 @@
-const {Anuncio}=require('../../models/PuntoMapa')
+const {Anuncio}=require('../models/puntoMapa.model')
 
 
 const getAnuncio = async (req, res) =>{

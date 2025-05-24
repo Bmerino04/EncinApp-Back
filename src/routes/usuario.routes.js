@@ -1,4 +1,4 @@
-const {Usuario}=require('../../models/Usuario')
+const {Usuario: UsuarioRoutes}=require('../models/usuario.model')
 
 const crearUsuario = async (req, res) =>{
 };
