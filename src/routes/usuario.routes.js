@@ -1,22 +1,21 @@
-const {Usuario: UsuarioRoutes}=require('../models/usuario.model')
+import usuarioModel from '../models/usuario.model';
+import express from 'express';
+import { crearUsuario, obtenerUsuario, obtenerUsuarios, actualizarUsuario, actualizarDisponibilidad, eliminarUsuario} from '../controllers/usuario.controller';
 
-const crearUsuario = async (req, res) =>{
-};
+const usuarioRouter = express.Router();
 
-const getUsuarios = async (req, res) =>{
-};
+usuarioRouter.post('/', crearUsuario);
 
-const getUsuario = async (req, res) =>{
-};
+usuarioRouter.get('/:usuarioId', obtenerUsuario);
 
-const patchUsuario = async (req, res) =>{
-};
+usuarioRouter.get('/', obtenerUsuarios);
 
-const patchDisponibilidad = async (req, res) =>{
-};
+usuarioRouter.patch('/:usuarioId', actualizarUsuario);
 
-const deleteUsuario = async (req, res) =>{
-};
+usuarioRouter.patch('/:usuarioId/disponibilidad', actualizarDisponibilidad);
 
-const postUsuario = async (req, res) =>{
-};
+usuarioRouter.delete('/:usuarioId', eliminarUsuario);
+
+export default usuarioRouter;
+
+//login??
