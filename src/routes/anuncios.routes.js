@@ -1,14 +1,17 @@
-const {Anuncio}=require('../models/puntoMapa.model')
+import anuncioModel from '../models/anuncio.model';
+import express from 'express';
+import { crearAnuncio, obtenerAnuncio, obtenerAnuncios, eliminarAnuncio} from '../controllers/anuncio.controller';
 
+const anuncioRouter = express.Router();
 
-const getAnuncio = async (req, res) =>{
-};
+anuncioRouter.post('/', crearAnuncio);
 
-const getAnuncios = async (req, res) =>{
-};
+anuncioRouter.get('/:anuncioId', obtenerAnuncio);
 
-const postAnuncio = async (req, res) =>{
-};
+anuncioRouter.get('/', obtenerAnuncios);
 
-const deleteAnuncio = async (req, res) =>{
-};
+anuncioRouter.delete('/:anuncioId', eliminarAnuncio);
+
+export default anuncioRouter;
+
+//login??
