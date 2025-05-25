@@ -1,6 +1,6 @@
 import comentariosModel from '../models/comentarioAlerta.model';
 import express from 'express';
-import { crearComentario, obtenerComentarios, eliminarComentario} from '../controllers/anuncio.controller';
+import { crearComentario, obtenerComentarios, eliminarComentario} from '../controllers/comentarioAlerta.controller';
 
 const comentariosRouter = express.Router();
 
