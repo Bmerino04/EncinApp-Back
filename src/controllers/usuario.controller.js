@@ -1,4 +1,5 @@
-const { usuario } = require('../models');
+import db from '../models/index.js';
+const { usuario } = db;
 
 async function crearUsuario(request, response) {
     try{

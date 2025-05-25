@@ -1,4 +1,5 @@
-const { anuncio } = require('../models');
+import db from '../models/index.js';
+const { anuncio } = db;
 
 async function crearAnuncio(request, response) {
     try{

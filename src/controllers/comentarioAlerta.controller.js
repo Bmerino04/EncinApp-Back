@@ -1,4 +1,5 @@
-const { comentarioAlerta } = require('../models');
+import db from '../models/index.js';
+const { comentarioAlerta } = db;
 
 async function crearComentarioAlerta(request, response) {
     try{
