@@ -1,3 +1,8 @@
+/**
+ * Modelo PuntoMapa
+ *
+ * Representa un punto georreferenciado en el sistema. Puede tener distintos fines como reportar alertas y mostrar distintos puntos de interés.
+ */
 export default (sequelize, DataTypes) => {
 const PuntoMapa = sequelize.define(
   'puntoMapa',
@@ -37,13 +42,21 @@ const PuntoMapa = sequelize.define(
         allowNull: false,
     }
 },
+/**
+ * Configuración de tabla:
+ * - tableName: fuerza el nombre de la tabla a 'usuario'
+ * - timestamps: desactivado (no guarda las fechas de creacion o modificacion)
+ * - freezeTableName: evita pluralizar el nombre de la tabla
+*/  
   {
     tableName:'punto_mapa',
     timestamps: false,
     freezeTableName:true,
   },
 );
-
+/**
+ * Asociaciones:
+ */
 PuntoMapa.associate = models =>{
   PuntoMapa.hasMany(models.comentarioAlerta, {
     foreignKey: 'id_usuario',

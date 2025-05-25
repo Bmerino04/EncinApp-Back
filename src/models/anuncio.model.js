@@ -1,3 +1,9 @@
+/**
+ * Modelo Anuncio
+ *
+ * Representa a un anuncio emitido por un usuario del sistema.
+ * 
+ */
 export default  (sequelize, DataTypes) => {
 const Anuncio = sequelize.define(
   'anuncio',
@@ -37,12 +43,21 @@ const Anuncio = sequelize.define(
       allowNull: false,
     },
 },
+/**
+ * Configuración de tabla:
+ * - tableName: fuerza el nombre de la tabla a 'usuario'
+ * - timestamps: desactivado (no guarda las fechas de creacion o modificacion)
+ * - freezeTableName: evita pluralizar el nombre de la tabla
+*/ 
   {
     tableName:'anuncio',
     timestamps: false,
     freezeTableName:true,
   },
 );
+/**
+ * Asociaciones:
+ */
 Anuncio.associate = models =>{
     Anuncio.belongsTo(models.usuario, {
       foreignKey : 'id_usuario',

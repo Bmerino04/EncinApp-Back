@@ -1,3 +1,9 @@
+/**
+ * Modelo comentarioAlerta
+ *
+ * Representa los comentario un usuario en las alertas emitidas.
+ * 
+ */
 export default  (sequelize, DataTypes) => {
 const ComentarioAlerta = sequelize.define(
   'comentarioAlerta',
@@ -17,12 +23,21 @@ const ComentarioAlerta = sequelize.define(
       allowNull: false,
     },
 },
+/**
+ * Configuración de tabla:
+ * - tableName: fuerza el nombre de la tabla a 'usuario'
+ * - timestamps: desactivado (no guarda las fechas de creacion o modificacion)
+ * - freezeTableName: evita pluralizar el nombre de la tabla
+*/ 
   {
     tableName:'comentario_alerta',
     timestamps: false,
     freezeTableName:true,
   },
 );
+/**
+ * Asociaciones:
+ */
 ComentarioAlerta.associate = models =>{
     ComentarioAlerta.belongsTo(models.usuario, {
       foreignKey : 'id_usuario',

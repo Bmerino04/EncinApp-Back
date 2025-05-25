@@ -1,3 +1,9 @@
+/**
+ * Modelo Usuario
+ *
+ * Representa a un usuario del sistema, incluyendo sus datos personales, estado y relaciones con otros modelos.
+ * 
+ */
 export default (sequelize, DataTypes) => {
 const Usuario = sequelize.define(
   'usuario',
@@ -32,15 +38,26 @@ const Usuario = sequelize.define(
       type: DataTypes.STRING(45),
       allowNull: false,
     },
+
+/**
+ * Configuración de tabla:
+ * - tableName: fuerza el nombre de la tabla a 'usuario'
+ * - timestamps: desactivado (no guarda las fechas de creacion o modificacion)
+ * - freezeTableName: evita pluralizar el nombre de la tabla
+ * - paranoid: activo (usa soft delete)
+*/    
 },
   {
     tableName:'usuario',
     timestamps: false,
     freezeTableName:true,
-    paranoid: true, //soft delete
+    paranoid: true,
   },
 );
 
+/**
+ * Asociaciones:
+ */
 Usuario.associate = models => {
   Usuario.hasMany(models.puntoMapa, {
     foreignKey: 'id_usuario',
