@@ -4,8 +4,8 @@ const { comentarioAlerta } = db;
 /**
  * Crea un nuevo comentario.
  *
- * @param {import('express').Request} request - Objeto de solicitud HTTP.
- * @param {import('express').Response} response - Objeto de respuesta HTTP.
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
  * @returns {Promise<void>}
  */
 async function crearComentarioAlerta(request, response) {
@@ -25,8 +25,8 @@ async function crearComentarioAlerta(request, response) {
 /**
  * Obtiene la lista de todos los comentarios.
  *
- * @param {import('express').Request} request - Objeto de solicitud HTTP.
- * @param {import('express').Response} response - Objeto de respuesta HTTP.
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
  * @returns {Promise<void>}
  */
 async function obtenerComentariosAlertas(request, response) {
@@ -41,8 +41,8 @@ async function obtenerComentariosAlertas(request, response) {
 /**
  * Elimina un comentario por su ID.
  *
- * @param {import('express').Request} request - Objeto de solicitud HTTP.
- * @param {import('express').Response} response - Objeto de respuesta HTTP.
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
  * @returns {Promise<void>}
  */
 async function eliminarComentarioAlerta(request, response) {
