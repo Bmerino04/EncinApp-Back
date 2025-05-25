@@ -1,2 +1,2 @@
-const {Alerta}=require('../../models/PuntoMapa.js')
+import express from 'express';
 
