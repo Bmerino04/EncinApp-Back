@@ -3,11 +3,11 @@ import { crearComentario, obtenerComentarios, eliminarComentario} from '../contr
 
 const comentariosRouter = express.Router();
 
-comentariosRouter.post('/', crearComentario);
+comentariosRouter.post('/', crearComentarioAlerta);
 
-comentariosRouter.get('/', obtenerComentarios);
+comentariosRouter.get('/', obtenerComentariosAlertas);
 
-comentariosRouter.delete('/:id', eliminarComentario);
+comentariosRouter.delete('/:id', eliminarComentarioAlerta);
 
 export default comentariosRouter;
 
