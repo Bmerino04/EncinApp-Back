@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 const Anuncio = sequelize.define(
-  'Anuncio',
+  'anuncio',
   {
     id_anuncio: {
       type: DataTypes.INTEGER,
@@ -35,11 +35,7 @@ const Anuncio = sequelize.define(
     fecha_emision: {
       type: DataTypes.DATE,
       allowNull: false,
-    },  
-    id_usuario: { //fk usuario
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },            
+    },
 },
   {
     tableName:'anuncio',
@@ -47,8 +43,8 @@ const Anuncio = sequelize.define(
     freezeTableName:true,
   },
 );
-Anuncio.associate = (models) =>{
-Anuncio.belongsTo(Usuario, {foreignKey:'id_usuario'});
+Anuncio.associate = models =>{
+    Anuncio.belongsTo(usuario);
 };
 return Anuncio;
 }

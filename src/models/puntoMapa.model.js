@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 const PuntoMapa = sequelize.define(
-  'PuntoMapa',
+  'puntoMapa',
   {
     id_punto_mapa: {
       type: DataTypes.INTEGER,
@@ -9,7 +9,7 @@ const PuntoMapa = sequelize.define(
       allowNull: false,
     },   
     tipo: {
-      type: DataTypes.ENUM('siniestro', 'salud', 'seguridad', 'carabineros', 'hospital', 'cesfam', 'dideco', 'farmacia'),
+      type: DataTypes.ENUM('siniestro', 'salud', 'seguridad', 'otro'),
       allowNull: false,
     },
     fecha_emision: {
@@ -32,18 +32,6 @@ const PuntoMapa = sequelize.define(
       type: DataTypes.STRING(45),
       allowNull: true,
     },
-    estado_atendido: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    estado_actividad: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    id_usuario: { //fk usuario
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },       
 },
   {
     tableName:'punto_mapa',
@@ -52,10 +40,10 @@ const PuntoMapa = sequelize.define(
   },
 );
 
-PuntoMapa.associate = (models) =>{
-  PuntoMapa.hasMany(ComentarioAlerta,{foreignKey:'id_usuario'});
+PuntoMapa.associate = models =>{
+  PuntoMapa.hasMany(comentarioAlerta);
 
-  PuntoMapa.belongsTo(Usuario, {foreignKey:'id_usuario'});
+  PuntoMapa.belongsTo(usuario);
 
 };
 return PuntoMapa;

@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 const ComentarioAlerta = sequelize.define(
-  'ComentarioAlerta',
+  'comentarioAlerta',
   {
     id_comentario: {
       type: DataTypes.INTEGER,
@@ -15,15 +15,7 @@ const ComentarioAlerta = sequelize.define(
     fecha_emision: {
       type: DataTypes.DATE,
       allowNull: false,
-    }, 
-    id_usuario: { //fk usuario
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },                
-    id_punto_mapa: { //fk punto mapa
-      type: DataTypes.INTEGER,
-      allowNull: false
-    },  
+    },
 },
   {
     tableName:'comentario_alerta',
@@ -31,9 +23,9 @@ const ComentarioAlerta = sequelize.define(
     freezeTableName:true,
   },
 );
-ComentarioAlerta.associate = (models) =>{
-ComentarioAlerta.belongsTo(Usuario, {foreignKey:'id_usuario'});
-ComentarioAlerta.belongsTo(PuntoMapa, {foreignKey:'id_punto_mapa'});
+ComentarioAlerta.associate = models =>{
+    ComentarioAlerta.belongsTo(usuario);
+    ComentarioAlerta.belongsTo(puntoMapa);
 };
 return ComentarioAlerta;
 }

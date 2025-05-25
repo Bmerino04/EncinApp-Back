@@ -1,4 +1,4 @@
-import usuarioModel from '../models/usuario.model';
+import usuarioModel from '../models/usuario.models';
 import express from 'express';
 import { crearUsuario, obtenerUsuario, obtenerUsuarios, actualizarUsuario, actualizarDisponibilidad, eliminarUsuario} from '../controllers/usuario.controller';
 
@@ -18,4 +18,3 @@ usuarioRouter.delete('/:usuarioId', eliminarUsuario);
 
 export default usuarioRouter;
 
-//login??

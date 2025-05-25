@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
 const Permiso = sequelize.define(
-  'Permiso',
+  'permiso',
   {
     id_permiso: {
       type: DataTypes.INTEGER,
@@ -19,12 +19,8 @@ const Permiso = sequelize.define(
     freezeTableName:true,
   },
 );
-Permiso.associate = (models) =>{
-Permiso.belongsToMany(Usuario,{
-  through: 'usuario_permiso',
-  foreignKey: 'id_permiso',
-  otherKey: 'id_usuario',
-});
+Permiso.associate = models =>{
+    Permiso.belongsToMany(usuario,{through: 'usuario_permiso'});
 };
 return Permiso;
 }

@@ -1,13 +1,14 @@
+'use strict'
 module.exports = (sequelize, DataTypes) => {
 const Usuario = sequelize.define(
-  'Usuario',
+  'usuario',
   {
     id_usuario: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement:true,
       allowNull: false,
-    },    
+    },
     nombre: {
       type: DataTypes.STRING(45),
       allowNull: false,
@@ -37,19 +38,17 @@ const Usuario = sequelize.define(
     tableName:'usuario',
     timestamps: false,
     freezeTableName:true,
+    paranoid: true, //soft delete
   },
 );
 
-Usuario.associate = (models) =>{
-  Usuario.hasMany(PuntoMapa,{foreignKey:'id_usuario'});
-  Usuario.hasMany(ComentarioAlerta,{foreignKey:'id_usuario'});
-  Usuario.hasMany(Anuncio,{foreignKey:'id_usuario'});
+Usuario.associate = models =>{
+  Usuario.hasMany(puntoMapa);
+  Usuario.hasMany(comentarioAlerta);
+  Usuario.hasMany(anuncio);
 
   Usuario.belongsToMany(Permiso,{
-  through: 'usuario_permiso',
-  foreignKey: 'id_usuario',
-  otherKey: 'id_permiso',
-});
+  through: 'usuario_permiso'});
 };
 return Usuario;
 }
