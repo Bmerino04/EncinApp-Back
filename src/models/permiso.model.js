@@ -23,4 +23,4 @@ Permiso.associate = models =>{
     Permiso.belongsToMany(usuario,{through: 'usuario_permiso'});
 };
 return Permiso;
-}
+};

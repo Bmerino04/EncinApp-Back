@@ -28,4 +28,4 @@ ComentarioAlerta.associate = models =>{
     ComentarioAlerta.belongsTo(puntoMapa);
 };
 return ComentarioAlerta;
-}
+};

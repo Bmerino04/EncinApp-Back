@@ -51,4 +51,4 @@ PuntoMapa.associate = models =>{
 
 };
 return PuntoMapa;
-}
+};

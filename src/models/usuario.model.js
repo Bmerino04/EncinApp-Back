@@ -1,4 +1,4 @@
-'use strict'
+
 module.exports = (sequelize, DataTypes) => {
 const Usuario = sequelize.define(
   'usuario',
@@ -28,11 +28,11 @@ const Usuario = sequelize.define(
     disponibilidad: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-    },    
+    },
     direccion: {
       type: DataTypes.STRING(45),
       allowNull: false,
-    }, 
+    },
 },
   {
     tableName:'usuario',

@@ -47,4 +47,4 @@ Anuncio.associate = models =>{
     Anuncio.belongsTo(usuario);
 };
 return Anuncio;
-}
+};

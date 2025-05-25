@@ -1,4 +1,4 @@
-import usuarioModel from '../models/usuario.models';
+import usuarioModel from '../models/usuario.model';
 import express from 'express';
 import { crearUsuario, obtenerUsuario, obtenerUsuarios, actualizarUsuario, actualizarDisponibilidad, eliminarUsuario} from '../controllers/usuario.controller';
 
