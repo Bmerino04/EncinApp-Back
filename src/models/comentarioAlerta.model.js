@@ -24,8 +24,14 @@ const ComentarioAlerta = sequelize.define(
   },
 );
 ComentarioAlerta.associate = models =>{
-    ComentarioAlerta.belongsTo(usuario);
-    ComentarioAlerta.belongsTo(puntoMapa);
+    ComentarioAlerta.belongsTo(models.usuario, {
+      foreignKey : 'id_usuario',
+      as: 'usuario',
+    });
+    ComentarioAlerta.belongsTo(models.puntoMapa, {
+      foreignKey : 'id_punto_mapa',
+      as: 'puntoMapa',
+    });
 };
 return ComentarioAlerta;
 };

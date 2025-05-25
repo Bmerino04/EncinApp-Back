@@ -42,13 +42,26 @@ const Usuario = sequelize.define(
   },
 );
 
-Usuario.associate = models =>{
-  Usuario.hasMany(puntoMapa);
-  Usuario.hasMany(comentarioAlerta);
-  Usuario.hasMany(anuncio);
+Usuario.associate = models => {
+  Usuario.hasMany(models.puntoMapa, {
+    foreignKey: 'id_usuario',
+    as: 'puntosMapa'
+  });
+  Usuario.hasMany(models.comentarioAlerta, {
+    foreignKey: 'id_usuario',
+    as: 'comentariosAlerta'
+  });
+  Usuario.hasMany(models.anuncio, {
+    foreignKey: 'id_usuario',
+    as: 'anuncios'
+  });
 
-  Usuario.belongsToMany(Permiso,{
-  through: 'usuario_permiso'});
+  Usuario.belongsToMany(models.permiso, { 
+    through: 'usuario_permiso',
+    foreignKey: 'id_usuario',
+    otherKey: 'id_permiso',
+    as: 'permisos'
+  });
 };
 return Usuario;
 }

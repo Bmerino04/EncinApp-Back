@@ -44,7 +44,10 @@ const Anuncio = sequelize.define(
   },
 );
 Anuncio.associate = models =>{
-    Anuncio.belongsTo(usuario);
+    Anuncio.belongsTo(models.usuario, {
+      foreignKey : 'id_usuario',
+      as: 'usuario',
+    });
 };
 return Anuncio;
 };

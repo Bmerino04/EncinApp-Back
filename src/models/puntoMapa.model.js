@@ -45,9 +45,15 @@ const PuntoMapa = sequelize.define(
 );
 
 PuntoMapa.associate = models =>{
-  PuntoMapa.hasMany(comentarioAlerta);
+  PuntoMapa.hasMany(models.comentarioAlerta, {
+    foreignKey: 'id_usuario',
+    as: 'comentariosAlerta'
+  });
 
-  PuntoMapa.belongsTo(usuario);
+  PuntoMapa.belongsTo(models.usuario, {
+      foreignKey : 'id_usuario',
+      as: 'usuario',
+    });
 
 };
 return PuntoMapa;

@@ -19,8 +19,13 @@ const Permiso = sequelize.define(
     freezeTableName:true,
   },
 );
-Permiso.associate = models =>{
-    Permiso.belongsToMany(usuario,{through: 'usuario_permiso'});
+Permiso.associate = models => {
+  Permiso.belongsToMany(models.usuario, {
+    through: 'usuario_permiso',
+    foreignKey: 'id_permiso',
+    otherKey: 'id_usuario',
+    as: 'usuarios'
+  });
 };
 return Permiso;
 };
