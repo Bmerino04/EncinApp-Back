@@ -1,4 +1,3 @@
-import comentariosModel from '../models/comentarioAlerta.model';
 import express from 'express';
 import { crearComentario, obtenerComentarios, eliminarComentario} from '../controllers/comentarioAlerta.controller';
 
@@ -8,7 +7,7 @@ comentariosRouter.post('/', crearComentario);
 
 comentariosRouter.get('/', obtenerComentarios);
 
-comentariosRouter.delete('/:comentarioId', eliminarComentario);
+comentariosRouter.delete('/:id', eliminarComentario);
 
 export default comentariosRouter;
 

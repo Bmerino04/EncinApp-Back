@@ -1,4 +1,3 @@
-import anuncioModel from '../models/anuncio.model';
 import express from 'express';
 import { crearAnuncio, obtenerAnuncio, obtenerAnuncios, eliminarAnuncio} from '../controllers/anuncio.controller';
 
@@ -6,11 +5,11 @@ const anuncioRouter = express.Router();
 
 anuncioRouter.post('/', crearAnuncio);
 
-anuncioRouter.get('/:anuncioId', obtenerAnuncio);
+anuncioRouter.get('/:id', obtenerAnuncio);
 
 anuncioRouter.get('/', obtenerAnuncios);
 
-anuncioRouter.delete('/:anuncioId', eliminarAnuncio);
+anuncioRouter.delete('/:id', eliminarAnuncio);
 
 export default anuncioRouter;
 

@@ -43,7 +43,7 @@ async function obtenerUsuarios(request, response) {
 }
 
 async function actualizarUsuario(request, response) {
-    
+
 }
 
 async function actualizarDisponibilidad(request, response) {}
