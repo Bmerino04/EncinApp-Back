@@ -32,6 +32,10 @@ const PuntoMapa = sequelize.define(
       type: DataTypes.STRING(45),
       allowNull: true,
     },
+    origen_punto: {
+        type: DataTypes.ENUM('alerta', 'punto_interes'),
+        allowNull: false,
+    }
 },
   {
     tableName:'punto_mapa',
