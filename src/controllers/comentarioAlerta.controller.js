@@ -1,6 +1,13 @@
 import db from '../models/index.js';
 const { comentarioAlerta } = db;
 
+/**
+ * Crea un nuevo comentario.
+ *
+ * @param {import('express').Request} request - Objeto de solicitud HTTP.
+ * @param {import('express').Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 async function crearComentarioAlerta(request, response) {
     try{
         const body = request.body;
@@ -15,6 +22,13 @@ async function crearComentarioAlerta(request, response) {
     }
 }
 
+/**
+ * Obtiene la lista de todos los comentarios.
+ *
+ * @param {import('express').Request} request - Objeto de solicitud HTTP.
+ * @param {import('express').Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 async function obtenerComentariosAlertas(request, response) {
     try{
         const comentariosEncontrados = await comentarioAlerta.findAll();
@@ -24,11 +38,18 @@ async function obtenerComentariosAlertas(request, response) {
     }
 }
 
+/**
+ * Elimina un comentario por su ID.
+ *
+ * @param {import('express').Request} request - Objeto de solicitud HTTP.
+ * @param {import('express').Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 async function eliminarComentarioAlerta(request, response) {
     try{
         const comentarioId = request.params.id;
 
-        await comentarioAlerta.destroy({ _id: comentarioId});
+        await comentarioAlerta.destroy({ where: { id: comentarioId } });
         return response.status(200).json({message: 'Comentario eliminado'});
     }catch(error){
         return response.status(500).json({error});

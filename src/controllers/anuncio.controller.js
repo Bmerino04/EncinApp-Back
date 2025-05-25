@@ -1,6 +1,13 @@
 import db from '../models/index.js';
 const { anuncio } = db;
 
+/**
+ * Crea un nuevo anuncio.
+ *
+ * @param {import('express').Request} request - Objeto de solicitud HTTP.
+ * @param {import('express').Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 async function crearAnuncio(request, response) {
     try{
         const body = request.body;
@@ -19,6 +26,14 @@ async function crearAnuncio(request, response) {
         return response.status(500).json({error});
     }
 }
+
+/**
+ * Obtiene un anuncio por su ID.
+ *
+ * @param {import('express').Request} request - Objeto de solicitud HTTP.
+ * @param {import('express').Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 async function obtenerAnuncio(request, response) {
     try{
         const anuncioId = request.params.id;
@@ -35,6 +50,13 @@ async function obtenerAnuncio(request, response) {
     }
 }
 
+/**
+ * Obtiene la lista de todos los anuncios.
+ *
+ * @param {import('express').Request} request - Objeto de solicitud HTTP.
+ * @param {import('express').Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 async function obtenerAnuncios(request, response) {
     try{
         const anunciosEncontrados = await anuncio.findAll();
@@ -44,11 +66,18 @@ async function obtenerAnuncios(request, response) {
     }
 }
 
+/**
+ * Elimina un anuncio por su ID}.
+ *
+ * @param {import('express').Request} request - Objeto de solicitud HTTP.
+ * @param {import('express').Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 async function eliminarAnuncio(request, response) {
     try{
         const anuncioId = request.params.id;
 
-        await anuncio.destroy({ _id: anuncioId});
+        await anuncio.destroy({ where: { id: usuarioId } });
         return response.status(200).json({message: 'Anuncio eliminado'});
     }catch(error){
         return response.status(500).json({error});
