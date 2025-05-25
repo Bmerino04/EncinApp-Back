@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Backend de EncinApp con Express y MySQL",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
