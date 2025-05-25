@@ -14,4 +14,3 @@ anuncioRouter.delete('/:anuncioId', eliminarAnuncio);
 
 export default anuncioRouter;
 
-//login??

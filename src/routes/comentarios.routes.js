@@ -1,7 +1,14 @@
-const {Comentario}=require('../../models/Comentario')
+import comentariosModel from '../models/comentarioAlerta.model';
+import express from 'express';
+import { crearComentario, obtenerComentarios, eliminarComentario} from '../controllers/anuncio.controller';
 
-const postComentario = async (req, res) =>{
-};
+const comentariosRouter = express.Router();
 
-const getComentarios = async (req, res) =>{
-};
+comentariosRouter.post('/', crearComentario);
+
+comentariosRouter.get('/', obtenerComentarios);
+
+comentariosRouter.delete('/:comentarioId', eliminarComentario);
+
+export default comentariosRouter;
+
