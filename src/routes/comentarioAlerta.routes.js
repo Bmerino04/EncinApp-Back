@@ -1,5 +1,5 @@
 import express from 'express';
-import { crearComentario, obtenerComentarios, eliminarComentario} from '../controllers/comentarioAlerta.controller';
+import { crearComentario, obtenerComentarios, eliminarComentario} from '../controllers/comentarioAlerta.controller.js';
 
 const comentariosRouter = express.Router();
 

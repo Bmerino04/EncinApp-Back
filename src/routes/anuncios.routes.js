@@ -1,5 +1,5 @@
 import express from 'express';
-import { crearAnuncio, obtenerAnuncio, obtenerAnuncios, eliminarAnuncio} from '../controllers/anuncio.controller';
+import { crearAnuncio, obtenerAnuncio, obtenerAnuncios, eliminarAnuncio} from '../controllers/anuncio.controller.js';
 
 const anuncioRouter = express.Router();
 

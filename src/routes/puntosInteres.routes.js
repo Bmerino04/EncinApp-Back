@@ -1,4 +1,4 @@
-const {PuntosInteres: PuntosInteresRoutes}=require('../models/puntoMapa.model')
+const {PuntosInteres: PuntosInteresRoutes}=require('../models/puntoMapa.model.js')
 
 
 const getPuntosInteres = async (req, res) =>{

@@ -1,2 +1,2 @@
-const {Alerta}=require('../../models/PuntoMapa')
+const {Alerta}=require('../../models/PuntoMapa.js')
 
