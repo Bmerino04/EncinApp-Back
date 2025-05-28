@@ -1,10 +1,14 @@
+import 'bcrypt'
+from
+'bcryptjs';
 /**
  * Modelo Usuario
  *
  * Representa a un usuario del sistema, incluyendo sus datos personales, estado y relaciones con otros modelos.
  * 
  */
-export default (sequelize, DataTypes) => {
+
+export default (sequelize, DataTypes) =>    {
 const Usuario = sequelize.define(
   'usuario',
   {
@@ -79,5 +83,9 @@ Usuario.associate = models => {
     as: 'permisos'
   });
 };
+Usuario.beforeCreate(async (usuario, options) => {
+    const salt = await bcrypt.genSalt(10);
+    usuario.pin = await bcrypt.hash(usuario.pin, salt);
+})
 return Usuario;
 }
