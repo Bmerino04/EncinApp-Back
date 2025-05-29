@@ -1,6 +1,4 @@
-import 'bcrypt'
-from
-'bcryptjs';
+
 /**
  * Modelo Usuario
  *
@@ -83,9 +81,5 @@ Usuario.associate = models => {
     as: 'permisos'
   });
 };
-Usuario.beforeCreate(async (usuario, options) => {
-    const salt = await bcrypt.genSalt(10);
-    usuario.pin = await bcrypt.hash(usuario.pin, salt);
-})
 return Usuario;
 }
