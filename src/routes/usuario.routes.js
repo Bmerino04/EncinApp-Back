@@ -9,9 +9,6 @@ import { crearUsuario, obtenerUsuario, obtenerUsuarios, actualizarUsuario, actua
 
 const usuarioRouter = express.Router();
 
-// Crea un nuevo usuario
-usuarioRouter.post('/', crearUsuario);
-
 // Obtiene un usuario específico por ID
 usuarioRouter.get('/:id', obtenerUsuario);
 
