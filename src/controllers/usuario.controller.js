@@ -1,30 +1,6 @@
 import db from '../models/index.js';
 const { usuario } = db;
 
-/**
- * Crea un nuevo usuario.
- *
- * @param {Request} request - Objeto de solicitud HTTP.
- * @param {Response} response - Objeto de respuesta HTTP.
- * @returns {Promise<void>}
- */
-async function crearUsuario(request, response) {
-    try{
-        const body = request.body;
-
-        const usuarioCreado = await usuario.create({
-            nombre: body.nombre,
-            rut: body.rut,
-            pin: body.pin,
-            es_presidente: body.es_presidente,
-            disponibilidad: body.disponibilidad,
-            direccion: body.direccion,
-        });
-        return response.status(201).json({usuarioCreado});
-    } catch(error){
-        return response.status(500).json({error});
-    }
-}
 
 /**
  * Obtiene un usuario por su ID.
@@ -105,4 +81,4 @@ async function eliminarUsuario(request, response) {
     }
 }
 
-export { crearUsuario, obtenerUsuario, obtenerUsuarios, actualizarUsuario, actualizarDisponibilidad, eliminarUsuario };
+export { obtenerUsuario, obtenerUsuarios, actualizarUsuario, actualizarDisponibilidad, eliminarUsuario };
