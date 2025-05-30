@@ -1,8 +1,6 @@
 import db from '../models/index.js';
 const { usuario } = db;
-import 'bcrypt'
-from
-'bcryptjs';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 
@@ -37,7 +35,8 @@ async function registrarUsuario(request, response) {
         });
         return response.status(201).json({usuarioCreado});
     } catch(error){
-        return response.status(500).json({error});
+        console.error('Error al registrar usuario:', error);
+        return response.status(500).json({error: 'peoooo', detalle: error.message});
     }
 }
 
@@ -56,7 +55,7 @@ async function iniciarSesion(request, response) {
         }
 
         const token = jwt.sign({ id: usuarioEncontrado.id, rut: usuarioEncontrado.rut }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        return response.status(200).json({token, usuarioEncontrado});
+        return response.status(200).json({token, usuarioEncontrado  });
     } catch(error){
         return response.status(500).json({error});
     }
