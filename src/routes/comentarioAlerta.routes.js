@@ -6,8 +6,11 @@
  */
 import express from 'express';
 import { crearComentarioAlerta, obtenerComentariosAlertas, eliminarComentarioAlerta} from '../controllers/comentarioAlerta.controller.js';
+import { verificarToken } from '../middleware/auth.middleware.js';
 
 const comentariosRouter = express.Router();
+
+comentariosRouter.use(verificarToken);
 
 // Crea un nuevo comentario
 comentariosRouter.post('/', crearComentarioAlerta);

@@ -3,10 +3,9 @@ import { iniciarSesion, cerrarSesion, registrarUsuario } from '../controllers/au
 
 const authRouter = express.Router();
 
-authRouter.post('/', iniciarSesion);
+authRouter.post('/login', iniciarSesion);
 
 // Crea un nuevo usuario
 authRouter.post('/', cerrarSesion);
-authRouter.post('/', registrarUsuario);
 
 export default authRouter;

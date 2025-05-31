@@ -6,8 +6,11 @@
  */
 import express from 'express';
 import { crearAnuncio, obtenerAnuncio, obtenerAnuncios, eliminarAnuncio} from '../controllers/anuncio.controller.js';
+import { verificarToken } from '../middleware/auth.middleware.js';
 
 const anuncioRouter = express.Router();
+
+anuncioRouter.use(verificarToken);
 
 // Crea un nuevo anuncio
 anuncioRouter.post('/', crearAnuncio);
