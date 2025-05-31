@@ -17,7 +17,7 @@ const Usuario = sequelize.define(
       allowNull: false,
     },
     nombre: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     rut: {
@@ -25,7 +25,7 @@ const Usuario = sequelize.define(
       allowNull: false,
     },
     pin: {
-      type: DataTypes.CHAR(4),
+      type: DataTypes.STRING,
       allowNull: false,
     },
     es_presidente: {
@@ -37,7 +37,7 @@ const Usuario = sequelize.define(
       allowNull: false,
     },
     direccion: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
 
