@@ -7,13 +7,12 @@
 import express from 'express';
 import { registrarUsuario, obtenerUsuario, obtenerUsuarios, actualizarUsuario, actualizarDisponibilidad, eliminarUsuario} from '../controllers/usuario.controller.js';
 import { verificarToken } from '../middleware/auth.middleware.js';
-import authRouter from "./auth.routes.js";
 
 const usuarioRouter = express.Router();
 
-usuarioRouter.use(verificarToken);
-
 usuarioRouter.post('/', registrarUsuario);
+
+usuarioRouter.use(verificarToken);
 
 // Obtiene un usuario específico por ID
 usuarioRouter.get('/:id', obtenerUsuario);
