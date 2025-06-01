@@ -1,5 +1,5 @@
 import express from 'express';
-import { iniciarSesion, cerrarSesion, registrarUsuario } from '../controllers/auth.controller.js';
+import { iniciarSesion, cerrarSesion } from '../controllers/auth.controller.js';
 
 const authRouter = express.Router();
 
