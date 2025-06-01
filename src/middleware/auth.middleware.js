@@ -11,10 +11,14 @@ async function verificarToken(request, response, next) {
     }
     try {
         const data = jwt.verify(token, process.env.SECRET_KEY);
-        request.user = data;
+        request.user = {
+            id: data.id_usuario,
+            ...
+        };
         next();
     }catch(error){
         return response.status(403).json({message: 'Token inválido o expirado'})
     }
 
 }
+export default verificarToken;
