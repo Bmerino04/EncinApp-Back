@@ -1,4 +1,5 @@
 import db from '../models/index.js';
+import bcrypt from 'bcryptjs';
 const { usuario } = db;
 
 /**
@@ -109,10 +110,15 @@ async function eliminarUsuario(request, response) {
     try{
         const usuarioId = request.params.id;
 
-        await usuario.destroy({ where: { id: usuarioId } });
-        return response.status(200).json({message: 'Usuario eliminado'});
-    }catch(error){
-        return response.status(500).json({error});
+        const usuarioExistente = await usuario.findByPk(usuarioId); // Sequelize ya usa la PK definida (id_usuario)
+
+        if (!usuarioExistente) {
+            return response.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        await usuarioExistente.destroy(); // soft delete si paranoid está activo
+        return response.status(200).json({ message: 'Usuario eliminado correctamente' });
+    } catch (error) {
+        return response.status(500).json({ error: 'Error al eliminar usuario', detalle: error.message });
     }
 }
 
