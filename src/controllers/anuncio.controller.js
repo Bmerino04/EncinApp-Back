@@ -11,6 +11,7 @@ const { anuncio } = db;
 async function crearAnuncio(request, response) {
     try{
         const body = request.body;
+        const usuarioId = request.params.id;
 
         const anuncioCreado = await anuncio.create({
             titulo: body.titulo,
@@ -20,6 +21,7 @@ async function crearAnuncio(request, response) {
             fecha_relacionada: body.fecha_relacionada,
             direccion: body.direccion,
             fecha_emision: body.fecha_emision,
+            usuario_id: usuarioId,
         });
         return response.status(201).json({anuncioCreado});
     } catch(error){
@@ -77,7 +79,7 @@ async function eliminarAnuncio(request, response) {
     try{
         const anuncioId = request.params.id;
 
-        await anuncio.destroy({ where: { id: usuarioId } });
+        await anuncio.destroy({ where: { id_anuncio: anuncioId } });
         return response.status(200).json({message: 'Anuncio eliminado'});
     }catch(error){
         return response.status(500).json({error});
