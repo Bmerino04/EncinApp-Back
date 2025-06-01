@@ -17,7 +17,7 @@ async function iniciarSesion(request, response) {
             return response.status(401).json({error: 'Pin incorrecto. Intente de nuevo.'});
         }
 
-        const token = jwt.sign({ id: usuarioEncontrado.id, rut: usuarioEncontrado.rut }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ id_usuario: usuarioEncontrado.id_usuario, rut: usuarioEncontrado.rut }, process.env.JWT_SECRET, { expiresIn: '1h' });
         return response.status(200).json({token, usuarioEncontrado  });
     } catch(error){
         return response.status(500).json({error});
