@@ -3,7 +3,7 @@ const { usuario } = db;
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
-async function iniciarSesion(request, response) {
+export default async function iniciarSesion(request, response) {
     try{
         const {rut, pin} = request.body;
 
@@ -22,11 +22,4 @@ async function iniciarSesion(request, response) {
     } catch(error){
         return response.status(500).json({error});
     }
-
 }
-
-async function cerrarSesion(request, response) {
-
-}
-
-export { iniciarSesion, cerrarSesion };
