@@ -9,6 +9,7 @@ async function obtenerPermisosUsuario(request, response) {
         const usuarioEncontrado = await usuario.findByPk(usuarioId, {
             include: {
                 model: permiso,
+                as: 'permisos',
                 attributes: ['id_permiso', 'nombre'],
                 through: {
                     attributes: [] // Excluye los atributos de la tabla intermedia
@@ -20,9 +21,13 @@ async function obtenerPermisosUsuario(request, response) {
             return response.status(404).json({ message: 'Usuario no encontrado' });
         }
 
+        if (usuarioEncontrado.permisos.length === 0) {
+            return response.status(404).json({ message: 'El usuario no tiene permisos asignados' });
+        }
+
         return response.status(200).json({ permisos: usuarioEncontrado.permisos });
     } catch (error) {
-        return response.status(500).json({ error: 'Error al obtener los permisos del usuario' });
+        return response.status(500).json({ error: 'Error al obtener los permisos del usuario', detalle: error.message });
     }
 }  
 
