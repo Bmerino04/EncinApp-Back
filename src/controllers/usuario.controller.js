@@ -85,7 +85,46 @@ async function obtenerUsuarios(request, response) {
  * @returns {Promise<void>}
  */
 async function actualizarUsuario(request, response) {
-    //lógica aún no implementada
+    try {
+        const usuarioId = request.params.id;
+        const updates = request.body;
+
+        const usuarioExistente = await usuario.findByPk(usuarioId);
+        if (!usuarioExistente) {
+            return response.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        if (updates.rut && updates.rut !== usuarioExistente.rut) {
+            const usuarioConRut = await usuario.findOne({ where: { rut: updates.rut } });
+            if (usuarioConRut) {
+                return response.status(400).json({ error: 'El RUT ya está registrado para otro usuario' });
+            }
+        }
+
+        const updatedData = {};
+        if (updates.nombre) updatedData.nombre = updates.nombre;
+        if (updates.rut) updatedData.rut = updates.rut;
+        if (updates.es_presidente !== undefined) updatedData.es_presidente = updates.es_presidente;
+        if (updates.disponibilidad !== undefined) updatedData.disponibilidad = updates.disponibilidad;
+        if (updates.direccion) updatedData.direccion = updates.direccion;
+
+        if (updates.pin) {
+            const salt = await bcrypt.genSalt(10);
+            updatedData.pin = await bcrypt.hash(updates.pin, salt);
+        }
+
+        await usuarioExistente.update(updatedData);
+        return response.status(200).json({ 
+            message: 'Usuario actualizado correctamente', 
+            usuario: usuarioExistente 
+        });
+    } catch (error) {
+        console.error('Error al actualizar usuario:', error);
+        return response.status(500).json({ 
+            error: 'Error al actualizar usuario', 
+            detalle: error.message 
+        });
+    }
 }
 
 /**
