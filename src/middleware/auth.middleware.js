@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
-async function verificarToken(request, response, next) {
+export default async function verificarToken (request, response, next) {
     const token = request.headers['authorization'];
     if (!token) {
         return response.status(401).json({
@@ -21,4 +21,3 @@ async function verificarToken(request, response, next) {
     }
 
 }
-export default verificarToken;

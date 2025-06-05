@@ -6,7 +6,7 @@
  */
 import express from 'express';
 import { registrarUsuario, obtenerUsuario, obtenerUsuarios, actualizarUsuario, actualizarDisponibilidad, eliminarUsuario} from '../controllers/usuario.controller.js';
-import { verificarToken } from '../middleware/auth.middleware.js';
+import  verificarToken  from '../middleware/auth.middleware.js';
 
 const usuarioRouter = express.Router();
 
