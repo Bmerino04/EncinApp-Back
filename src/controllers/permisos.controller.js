@@ -26,4 +26,37 @@ async function obtenerPermisosUsuario(request, response) {
     }
 }  
 
+async function actualizarPermisosUsuario(request, response) {
+    try {
+        const usuarioId = request.params.id;
+        const  nombrePermisos = request.body;
+
+        if (!Array.isArray(nombrePermisos) || nombrePermisos.length === 0) {
+            return response.status(400).json({ message: 'Debe proporcionar una lista de permisos válida' });
+        }
+
+        const usuarioExistente = await usuario.findByPk(usuarioId);
+        if (!usuarioExistente) {
+            return response.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        const permisos = await permiso.findAll({
+            where: {
+                nombre: nombrePermisos
+            }
+        });
+
+        if (permisos.length !== nombrePermisos.length) {
+            return response.status(400).json({ message: 'Algunos permisos no existen' });
+        }
+
+        // Actualiza los permisos del usuario
+        await usuarioExistente.setPermisos(permisos);
+
+        return response.status(200).json({ message: 'Permisos actualizados correctamente' });
+    } catch (error) {
+        return response.status(500).json({ error: 'Error al actualizar los permisos del usuario' });
+    }
+}
+
 export { obtenerPermisosUsuario, actualizarPermisosUsuario };
