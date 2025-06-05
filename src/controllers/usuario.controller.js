@@ -135,7 +135,23 @@ async function actualizarUsuario(request, response) {
  * @returns {Promise<void>}
  */
 async function actualizarDisponibilidad(request, response) {
-    //lógica aún no implementada
+    try {
+        const usuarioId = request.params.id;
+        const { disponibilidad } = request.body;
+
+        const usuarioExistente = await usuario.findByPk(usuarioId);
+        if (!usuarioExistente) {
+            return response.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        usuarioExistente.disponibilidad = disponibilidad;
+        await usuarioExistente.save();
+        
+        return response.status(200).json({ message: 'Disponibilidad actualizada correctamente', usuario: usuarioExistente });
+    } catch (error) {
+        return response.status(500).json({ error: 'Error al actualizar disponibilidad', detalle: error.message });
+    }
+
 }
 
 /**

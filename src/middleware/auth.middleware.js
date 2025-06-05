@@ -13,7 +13,7 @@ async function verificarToken(request, response, next) {
         const data = jwt.verify(token, process.env.SECRET_KEY);
         request.user = {
             id: data.id_usuario,
-            ...
+            ...data
         };
         next();
     }catch(error){
