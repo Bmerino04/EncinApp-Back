@@ -7,10 +7,11 @@
 import express from 'express';
 import { registrarUsuario, obtenerUsuario, obtenerUsuarios, actualizarUsuario, actualizarDisponibilidad, eliminarUsuario} from '../controllers/usuario.controller.js';
 import  verificarToken  from '../middleware/auth.middleware.js';
+import verificarPermiso from '../middleware/permisos.middleware.js';
 
 const usuarioRouter = express.Router();
 
-usuarioRouter.post('/', registrarUsuario);
+usuarioRouter.post('/', verificarPermiso('gestionar_usuarios'), registrarUsuario);
 
 usuarioRouter.use(verificarToken);
 
@@ -18,16 +19,16 @@ usuarioRouter.use(verificarToken);
 usuarioRouter.get('/:id', obtenerUsuario);
 
 // Lista todos los usuarior existentes
-usuarioRouter.get('/', obtenerUsuarios);
+usuarioRouter.get('/', verificarPermiso('gestionar_usuarios'), obtenerUsuarios);
 
 //Actualiza los datos de un usuario
-usuarioRouter.patch('/:id', actualizarUsuario);
+usuarioRouter.patch('/:id', verificarPermiso('gestionar_usuarios'), actualizarUsuario);
 
 //Actualiza la disponibilidad de un usuario
 usuarioRouter.patch('/:id/disponibilidad', actualizarDisponibilidad);
 
 // Elimina un usuario por ID
-usuarioRouter.delete('/:id', eliminarUsuario);
+usuarioRouter.delete('/:id', verificarPermiso('gestionar_usuarios'), eliminarUsuario);
 
 export default usuarioRouter;
 
