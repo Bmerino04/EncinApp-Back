@@ -10,7 +10,7 @@ export default async function verificarToken (request, response, next) {
         });
     }
     try {
-        const data = jwt.verify(token, process.env.SECRET_KEY);
+        const data = jwt.verify(token, process.env.JWT_SECRET);
         request.user = {
             id: data.id_usuario,
             ...data
