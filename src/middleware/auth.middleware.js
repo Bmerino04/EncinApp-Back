@@ -19,5 +19,4 @@ export default async function verificarToken (request, response, next) {
     }catch(error){
         return response.status(403).json({message: 'Token inválido o expirado'})
     }
-
 }

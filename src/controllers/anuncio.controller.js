@@ -10,8 +10,10 @@ const { anuncio } = db;
  */
 async function crearAnuncio(request, response) {
     try{
+
+        console.log('Request user:', request.user);
         const body = request.body;
-        const usuarioId = request.params.id;
+        const usuarioId = request.user.id;
 
         const anuncioCreado = await anuncio.create({
             titulo: body.titulo,

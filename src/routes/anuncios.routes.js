@@ -7,13 +7,14 @@
 import express from 'express';
 import { crearAnuncio, obtenerAnuncio, obtenerAnuncios, eliminarAnuncio} from '../controllers/anuncio.controller.js';
 import  verificarToken  from '../middleware/auth.middleware.js';
+import verificarPermiso from '../middleware/permisos.middleware.js';
 
 const anuncioRouter = express.Router();
 
 anuncioRouter.use(verificarToken);
 
 // Crea un nuevo anuncio
-anuncioRouter.post('/', crearAnuncio);
+anuncioRouter.post('/', verificarPermiso('gestionar_anuncios'), crearAnuncio);
 
 // Obtiene un anuncio específico por ID
 anuncioRouter.get('/:id', obtenerAnuncio);
@@ -22,7 +23,7 @@ anuncioRouter.get('/:id', obtenerAnuncio);
 anuncioRouter.get('/', obtenerAnuncios);
 
 // Elimina un anuncio por ID
-anuncioRouter.delete('/:id', eliminarAnuncio);
+anuncioRouter.delete('/:id', verificarPermiso('gestionar_anuncios'), eliminarAnuncio);
 
 export default anuncioRouter;
 
