@@ -12,11 +12,11 @@ export default async function verificarToken (request, response, next) {
     try {
         const data = jwt.verify(token, process.env.JWT_SECRET);
         request.user = {
-            id: data.id_usuario,
+            id: data.id,
             ...data
         };
         next();
-    }catch(error){
-        return response.status(403).json({message: 'Token inválido o expirado'})
+    } catch(error) {
+        return response.status(403).json({ message: 'Token inválido o expirado' });
     }
 }
