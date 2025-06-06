@@ -31,6 +31,9 @@ async function registrarUsuario(request, response) {
             disponibilidad: body.disponibilidad,
             direccion: body.direccion,
         });
+
+        await usuarioCreado.setPermisos([]);
+        
         return response.status(201).json({usuarioCreado});
     } catch(error){
         console.error('Error al registrar usuario:', error);
