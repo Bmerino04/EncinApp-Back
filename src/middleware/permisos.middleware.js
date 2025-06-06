@@ -9,6 +9,7 @@ export default function verificarPermiso(nombrePermisoRequerido) {
             const usuarioEncontrado = await usuario.findByPk(usuarioId, {
                 include: {
                     model: permiso,
+                    as: 'permisos',
                     attributes: ['nombre'],
                     through: {
                         attributes: [] 
@@ -20,7 +21,7 @@ export default function verificarPermiso(nombrePermisoRequerido) {
                 return response.status(404).json({ message: 'Usuario no encontrado' });
             }
 
-            const permisosUsuario = usuarioEncontrado.permisos.map(p => p.nombre === nombrePermisoRequerido);
+            const permisosUsuario = usuarioEncontrado.permisos.some(p => p.nombre === nombrePermisoRequerido);
 
             if (!permisosUsuario) {
                 return response.status(403).json({ message: 'Permiso denegado' });
@@ -28,7 +29,7 @@ export default function verificarPermiso(nombrePermisoRequerido) {
 
             next();
         } catch (error) {
-            return response.status(500).json({ error: 'Error al verificar permisos' });
+            return response.status(500).json({ error: 'Error al verificar permisos',detalle: error.message });
         }
     }
 }

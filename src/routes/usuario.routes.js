@@ -10,10 +10,9 @@ import  verificarToken  from '../middleware/auth.middleware.js';
 import verificarPermiso from '../middleware/permisos.middleware.js';
 
 const usuarioRouter = express.Router();
+usuarioRouter.use(verificarToken);
 
 usuarioRouter.post('/', verificarPermiso('gestionar_usuarios'), registrarUsuario);
-
-usuarioRouter.use(verificarToken);
 
 // Obtiene un usuario específico por ID
 usuarioRouter.get('/:id', obtenerUsuario);
