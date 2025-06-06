@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import db from './models/index.js';
 import rutas from './routes/index.js';
 import waitForDb from './utils/waitForDb.js';
@@ -6,6 +7,8 @@ import dotenv from 'dotenv';
 const { config } = dotenv;
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
