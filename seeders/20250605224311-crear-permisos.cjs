@@ -55,8 +55,8 @@ module.exports = {
           es_presidente: true,
           disponibilidad: false,
           direccion: 'UFRO',
-          createdAt: now,
-          updatedAt: now,
+          //createdAt: now,
+          //updatedAt: now,
         }
       ]);
 
@@ -93,6 +93,7 @@ module.exports = {
         'gestionar_usuarios',
         'gestionar_anuncios',
         'gestionar_puntos',
+        'gestionar_alertas',
         'gestionar_permisos',
       ],
     }, {});
