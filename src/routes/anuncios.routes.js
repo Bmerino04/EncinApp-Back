@@ -10,7 +10,6 @@ import  verificarToken  from '../middleware/auth.middleware.js';
 import verificarPermiso from '../middleware/permisos.middleware.js';
 
 const anuncioRouter = express.Router();
-
 anuncioRouter.use(verificarToken);
 
 // Crea un nuevo anuncio

@@ -2,16 +2,15 @@ import express from "express";
 import {  obtenerPermisosUsuario, actualizarPermisosUsuario, transferirPresidencia } from "../controllers/permisos.controller.js";
 import verificarToken from "../middleware/auth.middleware.js";
 import verificarPresidencia from "../middleware/presidencia.middleware.js";
+import verificarPermiso from '../middleware/permisos.middleware.js';
 
 const permisosRouter = express.Router();
+permisosRouter.use(verificarToken);
 
+permisosRouter.patch("/presidencia/:id", verificarPresidencia(), transferirPresidencia);
 
-permisosRouter.use(verificarToken, verificarPresidencia());
+permisosRouter.get("/:id", verificarPermiso('gestionar_permisos'), obtenerPermisosUsuario);
 
-permisosRouter.patch("/:id/presidencia", transferirPresidencia);
-
-permisosRouter.get("/:id", obtenerPermisosUsuario);
-
-permisosRouter.patch("/:id", actualizarPermisosUsuario);
+permisosRouter.patch("/:id",verificarPermiso('gestionar_permisos'), actualizarPermisosUsuario);
 
 export default permisosRouter;
