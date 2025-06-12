@@ -52,7 +52,7 @@ async function obtenerUsuario(request, response) {
     try{
         const usuarioId = request.params.id;
 
-        const usuarioEncontrado = await usuario.findByPk(usuarioId); //soft delete
+        const usuarioEncontrado = await usuario.findByPk(usuarioId);
 
         if(!usuarioEncontrado){
             return response.status(404).json({message: 'Usuario no encontrado '});

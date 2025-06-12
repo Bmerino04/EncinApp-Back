@@ -6,9 +6,9 @@ import verificarPresidencia from "../middleware/presidencia.middleware.js";
 const permisosRouter = express.Router();
 
 
-permisosRouter.use(verificarToken, verificarPresidencia);
+permisosRouter.use(verificarToken, verificarPresidencia());
 
-permisosRouter.patch("/:id", transferirPresidencia);
+permisosRouter.patch("/:id/presidencia", transferirPresidencia);
 
 permisosRouter.get("/:id", obtenerPermisosUsuario);
 

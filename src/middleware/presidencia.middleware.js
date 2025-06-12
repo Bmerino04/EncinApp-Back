@@ -16,8 +16,7 @@ export default function verificarPresidencia() {
                 next();
             } else {
                 return response.status(403).json({ message: 'No tienes permisos de presidencia' });
-            }
-            
+            }     
 
         } catch (error) {
             return response.status(500).json({ error: 'Error al verificar la presidencia', detalle: error.message });
