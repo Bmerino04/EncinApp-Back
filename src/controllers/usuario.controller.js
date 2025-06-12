@@ -27,8 +27,8 @@ async function registrarUsuario(request, response) {
             nombre: body.nombre,
             rut: body.rut,
             pin: pinEncriptado,
-            es_presidente: body.es_presidente,
-            disponibilidad: body.disponibilidad,
+            es_presidente: false,
+            disponibilidad: body.disponibilidad ?? true,
             direccion: body.direccion,
         });
 
@@ -97,6 +97,12 @@ async function actualizarUsuario(request, response) {
             return response.status(404).json({ message: 'Usuario no encontrado' });
         }
 
+        if (updates.es_presidente !== undefined) {
+            return response.status(403).json({ 
+                error: 'No tienes permiso para cambiar el estado de presidente de un usuario'}
+            );
+        }
+
         if (updates.rut && updates.rut !== usuarioExistente.rut) {
             const usuarioConRut = await usuario.findOne({ where: { rut: updates.rut } });
             if (usuarioConRut) {
@@ -107,7 +113,6 @@ async function actualizarUsuario(request, response) {
         const updatedData = {};
         if (updates.nombre) updatedData.nombre = updates.nombre;
         if (updates.rut) updatedData.rut = updates.rut;
-        if (updates.es_presidente !== undefined) updatedData.es_presidente = updates.es_presidente;
         if (updates.disponibilidad !== undefined) updatedData.disponibilidad = updates.disponibilidad;
         if (updates.direccion) updatedData.direccion = updates.direccion;
 
