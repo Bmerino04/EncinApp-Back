@@ -8,6 +8,7 @@ module.exports = {
       'gestionar_usuarios',
       'gestionar_anuncios',
       'gestionar_puntos',
+      'gestionar_alertas',
       'gestionar_permisos',
     ];
 
