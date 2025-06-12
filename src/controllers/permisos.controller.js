@@ -98,13 +98,13 @@ async function transferirPresidencia(request, response) {
 
     // Asignar la presidencia al usuario
     const todosLosPermisos = await permiso.findAll()
+    
+    console.log(todosLosPermisos);
     await presidenteActual.update({ es_presidente: true });
     await nuevoPresidente.setPermisos(todosLosPermisos);
-    await nuevoPresidente.save();
-
+  
     await presidenteActual.update({ es_presidente: false });
     await presidenteActual.setPermisos([]);
-    await presidenteActual.save();
 
     return response.status(200).json({ message: "Presidencia transferida correctamente" });
 
