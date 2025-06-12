@@ -5,9 +5,7 @@ dotenv.config();
 export default async function verificarToken (request, response, next) {
     const token = request.headers['authorization'];
     if (!token) {
-        return response.status(401).json({
-            message: 'No se ha enviado el token'
-        });
+        return response.status(401).json({ message: 'No se ha enviado el token'});
     }
     try {
         const data = jwt.verify(token, process.env.JWT_SECRET);
@@ -17,6 +15,6 @@ export default async function verificarToken (request, response, next) {
         };
         next();
     } catch(error) {
-        return response.status(403).json({ message: 'Token inválido o expirado' });
+        return response.status(401).json({ message: 'Token inválido o expirado' });
     }
 }
