@@ -53,9 +53,7 @@ async function actualizarPermisosUsuario(request, response) {
 
     if (nombrePermisos.length === 0) {
       await usuarioExistente.setPermisos([]);
-      return response
-        .status(200)
-        .json({ message: "Permisos removidos correctamente" });
+      return response.status(200).json({ message: "Permisos removidos correctamente" });
     }
 
     const permisos = await permiso.findAll({
@@ -65,21 +63,54 @@ async function actualizarPermisosUsuario(request, response) {
     });
 
     if (permisos.length !== nombrePermisos.length) {
-      return response
-        .status(400)
-        .json({ message: "Algunos permisos no existen" });
+      return response.status(400).json({ message: "Algunos permisos no existen" });
     }
 
     await usuarioExistente.setPermisos(permisos);
 
-    return response
-      .status(200)
-      .json({ message: "Permisos actualizados correctamente" });
+    return response.status(200).json({ message: "Permisos actualizados correctamente" });
   } catch (error) {
-    return response
-      .status(500)
-      .json({ error: "Error al actualizar los permisos del usuario" });
+    return response.status(500).json({ error: "Error al actualizar los permisos del usuario" });
   }
 }
 
-export { obtenerPermisosUsuario, actualizarPermisosUsuario };
+async function transferirPresidencia(request, response) {
+  try {
+    const actualPresidenteId = request.user.id;
+    const nuevoPresidenteId = request.params.id;
+
+    const presidenteActual = await usuario.findByPk(actualPresidenteId, {
+      include: {
+        model: permiso,
+        as: "permisos"
+        }
+      });
+
+    const nuevoPresidente = await usuario.findByPk(nuevoPresidenteId);
+
+    if (!nuevoPresidente) {
+      return response.status(404).json({ message: "Usuario no encontrado" });
+    }
+
+    if (nuevoPresidente.es_presidente) {
+      return response.status(400).json({ message: "El usuario ya es presidente" });
+    }
+
+    // Asignar la presidencia al usuario
+    const todosLosPermisos = await permiso.findAll()
+    await presidenteActual.update({ es_presidente: true });
+    await nuevoPresidente.setPermisos(todosLosPermisos);
+    await nuevoPresidente.save();
+
+    await presidenteActual.update({ es_presidente: false });
+    await presidenteActual.setPermisos([]);
+    await presidenteActual.save();
+
+    return response.status(200).json({ message: "Presidencia transferida correctamente" });
+
+  } catch (error) {
+    return response.status(500).json({error: "Error al transferir la presidencia", detalle: error.message,});
+  }
+}
+
+export { obtenerPermisosUsuario, actualizarPermisosUsuario, transferirPresidencia };
