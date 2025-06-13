@@ -48,3 +48,16 @@ async function obtenerAlertasActivas(request, response) {
         return response.status(500).json({ error: "Error al obtener alertas", detalle: error.message });
     }
 }
+
+async function obtenerAlertasInactivas(request, response) {
+    try {
+        const alertasInactivas = await puntoMapa.findAll({
+            where: { origen_punto: 'alerta', estado_actividad: 0 },
+            order: [['fecha_emision', 'DESC']],
+        });
+        return response.status(200).json({ alertasInactivas });
+    } catch (error) {
+        return response.status(500).json({ error: "Error al obtener alertas inactivas", detalle: error.message });
+    }
+}
+
