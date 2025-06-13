@@ -5,6 +5,7 @@ import rutas from './routes/index.js';
 import waitForDb from './utils/waitForDb.js';
 import dotenv from 'dotenv';
 const { config } = dotenv;
+import desactivarAlertaTiempo from './utils/estadoAlerta.js';
 
 const app = express();
 
@@ -21,6 +22,10 @@ app.use('/api', rutas);
         console.log('Base de datos sincronizada');
         app.listen(3000, () => {
             console.log('Servidor escuchando en puerto 3000');
+
+            setInterval(() => {
+                desactivarAlertaTiempo(); // ejecuta cada 5 segundos
+            }, 60000);
         });
     } catch (err) {
         console.error('Error al conectar con la base de datos:', err);
