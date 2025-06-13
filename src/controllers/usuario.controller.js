@@ -37,7 +37,7 @@ async function registrarUsuario(request, response) {
         return response.status(201).json({usuarioCreado});
     } catch(error){
         console.error('Error al registrar usuario:', error);
-        return response.status(500).json({error: 'peoooo', detalle: error.message});
+        return response.status(500).json({error, detalle: error.message});
     }
 }
 
@@ -76,7 +76,7 @@ async function obtenerUsuarios(request, response) {
         const usuariosEncontrados = await usuario.findAll();
         return response.status(200).json({usuariosEncontrados});
     } catch(error){
-        return response.status(500).json({error});
+        return response.status(500).json({error: "Error al obtener usuarios", detalle: error.message});
     }
 }
 
@@ -122,16 +122,10 @@ async function actualizarUsuario(request, response) {
         }
 
         await usuarioExistente.update(updatedData);
-        return response.status(200).json({ 
-            message: 'Usuario actualizado correctamente', 
-            usuario: usuarioExistente 
-        });
+        return response.status(200).json({ message: 'Usuario actualizado correctamente', usuario: usuarioExistente });
     } catch (error) {
         console.error('Error al actualizar usuario:', error);
-        return response.status(500).json({ 
-            error: 'Error al actualizar usuario', 
-            detalle: error.message 
-        });
+        return response.status(500).json({ error: 'Error al actualizar usuario', detalle: error.message });
     }
 }
 

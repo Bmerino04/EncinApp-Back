@@ -18,7 +18,7 @@ async function crearComentarioAlerta(request, response) {
         });
         return response.status(201).json({comentarioCreado});
     } catch(error){
-        return response.status(500).json({error});
+        return response.status(500).json({error: "Error al crear comentario", detalle: error.message });
     }
 }
 
@@ -34,7 +34,7 @@ async function obtenerComentariosAlertas(request, response) {
         const comentariosEncontrados = await comentarioAlerta.findAll();
         return response.status(200).json({comentariosEncontrados});
     } catch(error){
-        return response.status(500).json({error});
+        return response.status(500).json({error: "Error al obtener comentarios", detalle: error.message });
     }
 }
 
@@ -52,7 +52,7 @@ async function eliminarComentarioAlerta(request, response) {
         await comentarioAlerta.destroy({ where: { id: comentarioId } });
         return response.status(200).json({message: 'Comentario eliminado'});
     }catch(error){
-        return response.status(500).json({error});
+        return response.status(500).json({error: "Error al eliminar comentario", detalle: error.message });
     }
 }
 

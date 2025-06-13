@@ -11,7 +11,6 @@ const { anuncio } = db;
 async function crearAnuncio(request, response) {
     try{
 
-        console.log('Request user:', request.user);
         const body = request.body;
         const usuarioId = request.user.id;
 

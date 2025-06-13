@@ -20,6 +20,6 @@ export default async function iniciarSesion(request, response) {
         const token = jwt.sign({ id: usuarioEncontrado.id_usuario, rut: usuarioEncontrado.rut }, process.env.JWT_SECRET, { expiresIn: '1h' });
         return response.status(200).json({token, usuarioEncontrado  });
     } catch(error){
-        return response.status(500).json({error});
+        return response.status(500).json({error: 'Error al iniciar sesión', detalle: error.message});
     }
 }

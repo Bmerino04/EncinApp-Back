@@ -21,17 +21,12 @@ async function obtenerPermisosUsuario(request, response) {
     }
 
     if (usuarioEncontrado.permisos.length === 0) {
-      return response
-        .status(404)
-        .json({ message: "El usuario no tiene permisos asignados" });
+      return response.status(404).json({ message: "El usuario no tiene permisos asignados" });
     }
 
     return response.status(200).json({ permisos: usuarioEncontrado.permisos });
   } catch (error) {
-    return response.status(500).json({
-      error: "Error al obtener los permisos del usuario",
-      detalle: error.message,
-    });
+    return response.status(500).json({error: "Error al obtener los permisos del usuario",detalle: error.message});
   }
 }
 
@@ -41,9 +36,7 @@ async function actualizarPermisosUsuario(request, response) {
     const nombrePermisos = request.body;
 
     if (!Array.isArray(nombrePermisos)) {
-      return response
-        .status(400)
-        .json({ message: "Debe proporcionar una lista de permisos válida" });
+      return response.status(400).json({ message: "Debe proporcionar una lista de permisos válida" });
     }
 
     const usuarioExistente = await usuario.findByPk(usuarioId);
@@ -70,7 +63,7 @@ async function actualizarPermisosUsuario(request, response) {
 
     return response.status(200).json({ message: "Permisos actualizados correctamente" });
   } catch (error) {
-    return response.status(500).json({ error: "Error al actualizar los permisos del usuario" });
+    return response.status(500).json({ error: "Error al actualizar los permisos del usuario", detalle: error.message });
   }
 }
 
