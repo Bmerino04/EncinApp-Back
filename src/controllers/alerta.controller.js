@@ -20,3 +20,20 @@ async function crearAlerta(request, response) {
     }
 }
 
+async function obtenerAlerta(request, response) {
+    try {
+        const alertaId = request.params.id;
+
+        const alertaEncontrada = await puntoMapa.findByPk(alertaId);
+
+        if (!alertaEncontrada) {
+            return response.status(404).json({ message: 'Alerta no encontrada' });
+        }
+
+        return response.status(200).json({ alertaEncontrada });
+    } catch (error) {
+        return response.status(500).json({ error: "Error al obtener alerta", detalle: error.message });
+    }
+}
+
+
