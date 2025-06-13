@@ -12,7 +12,7 @@ async function crearAlerta(request, response) {
             fecha_emision: body.fecha_emision,
             latitud: body.latitud,
             longitud: body.longitud,
-            usuario_id: usuarioId,
+            id_usuario: usuarioId,
         });
         return response.status(201).json({ alertaCreada });
     } catch (error) {
@@ -36,28 +36,28 @@ async function obtenerAlerta(request, response) {
     }
 }
 
-
-async function obtenerAlertasActivas(request, response) {
+async function obtenerAlertas(request, response) {
     try {
-        const alertasActivas = await puntoMapa.findAll({
-            where: { origen_punto: 'alerta', estado_actividad: 1 },
-            order: [['fecha_emision', 'DESC']],
+        const { estado, atendida } = request.query;
+
+        const condicion = {origen_punto: 'alerta'};
+
+        if (estado !== undefined) {
+            condicion.estado_actividad = estado;
+        }
+
+        if (atendida !== undefined) {
+            condicion.estado_atendida = atendida;
+        }
+
+        const alertasEncontradas = await puntoMapa.findAll({
+            where: condicion,
+            order: [['fecha_emision', 'DESC']]
         });
-        return response.status(200).json({ alertasActivas });
+
+        return response.status(200).json({ alertasEncontradas });
     } catch (error) {
         return response.status(500).json({ error: "Error al obtener alertas", detalle: error.message });
-    }
-}
-
-async function obtenerAlertasInactivas(request, response) {
-    try {
-        const alertasInactivas = await puntoMapa.findAll({
-            where: { origen_punto: 'alerta', estado_actividad: 0 },
-            order: [['fecha_emision', 'DESC']],
-        });
-        return response.status(200).json({ alertasInactivas });
-    } catch (error) {
-        return response.status(500).json({ error: "Error al obtener alertas inactivas", detalle: error.message });
     }
 }
 
@@ -67,7 +67,7 @@ async function desactivarAlerta(request, response) {
 
         const alertaActualizada = await puntoMapa.update(
             { estado_actividad: 0 },
-            { where: { id: alertaId } }
+            { where: { id_punto_mapa: alertaId } }
         );
 
         if (alertaActualizada[0] === 0) {
@@ -80,4 +80,4 @@ async function desactivarAlerta(request, response) {
     }
 }
 
-export { crearAlerta, obtenerAlerta, obtenerAlertasActivas, obtenerAlertasInactivas, desactivarAlerta };
+export { crearAlerta, obtenerAlerta, obtenerAlertas, desactivarAlerta };

@@ -1,7 +1,18 @@
 import express from 'express';
+import { crearAlerta, obtenerAlerta, obtenerAlertas, desactivarAlerta } from '../controllers/alerta.controller.js';
+import verificarToken from '../middleware/auth.middleware.js';
+import verificarPermiso from '../middleware/permisos.middleware.js';
 
-const router = express.Router();
+const alertaRouter = express.Router();
+alertaRouter.use(verificarToken);
 
-// Por ahora no hay rutas definidas, pero se exporta para evitar errores
-export default router;
+alertaRouter.post('/', crearAlerta);
+
+alertaRouter.get('/:id', obtenerAlerta);
+
+alertaRouter.get('/', obtenerAlertas);
+
+alertaRouter.patch('/:id', desactivarAlerta);
+
+export default alertaRouter;
 
