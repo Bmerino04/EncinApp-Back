@@ -61,3 +61,23 @@ async function obtenerAlertasInactivas(request, response) {
     }
 }
 
+async function desactivarAlerta(request, response) {
+    try {
+        const alertaId = request.params.id;
+
+        const alertaActualizada = await puntoMapa.update(
+            { estado_actividad: 0 },
+            { where: { id: alertaId } }
+        );
+
+        if (alertaActualizada[0] === 0) {
+            return response.status(404).json({ message: 'Alerta no encontrada o ya desactivada' });
+        }
+
+        return response.status(200).json({ message: 'Alerta desactivada correctamente' });
+    } catch (error) {
+        return response.status(500).json({ error: "Error al desactivar alerta", detalle: error.message });
+    }
+}
+
+export { crearAlerta, obtenerAlerta, obtenerAlertasActivas, obtenerAlertasInactivas, desactivarAlerta };
