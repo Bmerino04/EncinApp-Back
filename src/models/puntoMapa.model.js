@@ -29,6 +29,17 @@ const PuntoMapa = sequelize.define(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    estado_atendida:{
+      type: DataTypes.TINYINT,
+      defaultValue: 0, // 1 = atendida, 0 = no atendida
+      allowNull: true,
+    },
+    estado_actividad:{
+      type: DataTypes.TINYINT,
+      defaultValue: 1, // 1 = activo, 0 = inactivo
+      allowNull: true,
+     
+    },
     contacto: {
       type: DataTypes.STRING(45),
       allowNull: true,
@@ -40,7 +51,8 @@ const PuntoMapa = sequelize.define(
     origen_punto: {
         type: DataTypes.ENUM('alerta', 'punto_interes'),
         allowNull: false,
-    }
+    },
+
 },
 /**
  * Configuración de tabla:
