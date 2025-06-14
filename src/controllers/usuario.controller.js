@@ -139,17 +139,27 @@ async function actualizarUsuario(request, response) {
 async function actualizarDisponibilidad(request, response) {
     try {
         const usuarioId = request.params.id;
-        const { disponibilidad } = request.body;
 
         const usuarioExistente = await usuario.findByPk(usuarioId);
         if (!usuarioExistente) {
             return response.status(404).json({ message: 'Usuario no encontrado' });
         }
 
-        usuarioExistente.disponibilidad = disponibilidad;
-        await usuarioExistente.save();
-        
-        return response.status(200).json({ message: 'Disponibilidad actualizada correctamente', usuario: usuarioExistente });
+        // Obtener el valor actual antes de la actualización
+        const disponibilidadActual = usuarioExistente.disponibilidad;
+
+        await usuario.update(
+            { disponibilidad: !disponibilidadActual },
+            { where: { id_usuario: usuarioId } }
+        );
+
+        const usuarioActualizado = await usuario.findByPk(usuarioId);
+
+        return response.status(200).json({ 
+            message: usuarioActualizado.disponibilidad 
+                ? 'Usuario marcado como disponible' 
+                : 'Usuario marcado como no disponible', 
+        });        
     } catch (error) {
         return response.status(500).json({ error: 'Error al actualizar disponibilidad', detalle: error.message });
     }
