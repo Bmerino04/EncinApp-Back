@@ -5,7 +5,7 @@ import rutas from './routes/index.js';
 import waitForDb from './utils/waitForDb.js';
 import dotenv from 'dotenv';
 const { config } = dotenv;
-import desactivarAlertaTiempo from './utils/estadoAlerta.js';
+import {desactivarAlertaTiempo, actualizarEstadoAtencion } from './utils/estadoAlerta.js';
 
 const app = express();
 
@@ -24,7 +24,11 @@ app.use('/api', rutas);
             console.log('Servidor escuchando en puerto 3000');
 
             setInterval(() => {
-                desactivarAlertaTiempo(); // ejecuta cada 5 segundos
+                desactivarAlertaTiempo();
+            }, 60000);
+
+            setInterval(() => {
+                actualizarEstadoAtencion();
             }, 60000);
         });
     } catch (err) {
