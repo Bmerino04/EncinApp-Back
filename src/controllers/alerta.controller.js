@@ -1,5 +1,5 @@
 import db from '../models/index.js';
-const { puntoMapa } = db;
+const { puntoMapa, comentarioAlerta } = db;
 
 async function crearAlerta(request, response) {
     try {
@@ -24,7 +24,15 @@ async function obtenerAlerta(request, response) {
     try {
         const alertaId = request.params.id;
 
-        const alertaEncontrada = await puntoMapa.findByPk(alertaId);
+        const alertaEncontrada = await puntoMapa.findByPk(alertaId, {
+            include: [
+                {
+                    model: comentarioAlerta,
+                    as: 'comentariosAlerta',
+                    order: [['fecha_emision', 'DESC']],
+                }
+            ]
+        });
 
         if (!alertaEncontrada) {
             return response.status(404).json({ message: 'Alerta no encontrada' });
