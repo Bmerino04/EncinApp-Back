@@ -22,7 +22,7 @@ async function crearAnuncio(request, response) {
             fecha_relacionada: body.fecha_relacionada,
             direccion: body.direccion,
             fecha_emision: body.fecha_emision,
-            usuario_id: usuarioId,
+            id_usuario: usuarioId,
         });
         return response.status(201).json({anuncioCreado});
     } catch(error){
