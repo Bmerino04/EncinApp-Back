@@ -20,7 +20,7 @@ alertaRouter.post('/:id/comentarios', crearComentarioAlerta);
 
 alertaRouter.get('/:id/comentarios', obtenerComentariosAlerta);
 
-alertaRouter.delete('/:idAlerta/comentarios/:idComentario', eliminarComentarioAlerta);
+alertaRouter.delete('/:idAlerta/comentarios/:idComentario', verificarPermiso('gestionar_alertas'), eliminarComentarioAlerta);
 
 export default alertaRouter;
 
