@@ -41,4 +41,23 @@ async function obtenerPuntoInteres(request, response) {
     }
 }
 
+async function obtenerPuntosInteres(request, response) {
+    try {
+        const { tipo } = request.query;
+        const condicion = { origen_punto: 'punto_interes' };
+
+        if (tipo) {
+            condicion.tipo = tipo;
+        }
+
+        const puntosInteresEncontrados = await puntoMapa.findAll({
+            where: condicion
+        });
+
+        return response.status(200).json({ puntosInteresEncontrados });
+    } catch (error) {
+        return response.status(500).json({ error: "Error al obtener puntos de interés", detalle: error.message });
+    }
+}
+
 export { crearPuntoInteres, obtenerPuntoInteres, obtenerPuntosInteres, eliminarPuntoInteres};
