@@ -1,7 +1,7 @@
 import express from 'express';
 import { crearAlerta, obtenerAlerta, obtenerAlertas, desactivarAlerta } from '../controllers/alerta.controller.js';
 import { crearComentarioAlerta, obtenerComentariosAlerta, eliminarComentarioAlerta} from '../controllers/comentarioAlerta.controller.js';
-
+import { recomendarPuntoInteres } from '../controllers/puntoInteres.controller.js';
 import verificarToken from '../middleware/auth.middleware.js';
 import verificarPermiso from '../middleware/permisos.middleware.js';
 
@@ -21,6 +21,8 @@ alertaRouter.post('/:id/comentarios', crearComentarioAlerta);
 alertaRouter.get('/:id/comentarios', obtenerComentariosAlerta);
 
 alertaRouter.delete('/:idAlerta/comentarios/:idComentario', verificarPermiso('gestionar_alertas'), eliminarComentarioAlerta);
+
+alertaRouter.get('/:id/recomendaciones', recomendarPuntoInteres);
 
 export default alertaRouter;
 
