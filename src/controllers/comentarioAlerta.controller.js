@@ -1,6 +1,6 @@
-import { where } from 'sequelize';
 import db from '../models/index.js';
 const { comentarioAlerta, puntoMapa } = db;
+import { formatTime } from '../utils/formatTime.js';
 
 /**
  * Crea un nuevo comentario.
@@ -20,9 +20,12 @@ async function crearComentarioAlerta(request, response) {
             fecha_emision: body.fecha_emision,
             id_usuario: usuarioId,
             id_punto_mapa: alertaId,
-
         });
-        return response.status(201).json({comentarioCreado});
+
+        const comentarioFormateado = comentarioCreado.toJSON();
+        comentarioFormateado.fecha_emision = formatTime(comentarioFormateado.fecha_emision)
+
+        return response.status(201).json({comentarioCreado: comentarioFormateado});
     } catch(error){
         return response.status(500).json({error: "Error al crear comentario", detalle: error.message });
     }
@@ -51,9 +54,17 @@ async function obtenerComentariosAlerta(request, response) {
                 },
                 attributes: [],
             },
-            order: [['fecha_emision', 'ASC']]
+            order: [['fecha_emision', 'DESC']],
         });
-        return response.status(200).json({comentariosEncontrados});
+
+        
+        const comentariosFormateados = comentariosEncontrados.map(comentarioAlerta => {
+            const comentarioJSON = comentarioAlerta.toJSON();
+            comentarioJSON.fecha_emision = formatTime(comentarioJSON.fecha_emision);
+            return comentarioJSON;
+        });
+
+        return response.status(200).json({comentariosEncontrados: comentariosFormateados});
     } catch(error){
         return response.status(500).json({error: "Error al obtener comentarios", detalle: error.message });
     }

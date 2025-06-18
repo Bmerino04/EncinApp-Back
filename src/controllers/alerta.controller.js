@@ -1,5 +1,6 @@
 import db from '../models/index.js';
 const { puntoMapa, comentarioAlerta } = db;
+import { formatTime } from '../utils/formatTime.js';
 
 async function crearAlerta(request, response) {
     try {
@@ -9,12 +10,16 @@ async function crearAlerta(request, response) {
         const alertaCreada = await puntoMapa.create({
             origen_punto: 'alerta',
             tipo: body.tipo,
-            fecha_emision: body.fecha_emision,
             latitud: body.latitud,
             longitud: body.longitud,
             id_usuario: usuarioId,
         });
-        return response.status(201).json({ alertaCreada });
+        
+        const alertaFormateada = alertaCreada.toJSON();
+        alertaFormateada.fecha_emision = formatTime(alertaFormateada.fecha_emision)
+    
+        return response.status(201).json({ alertaCreada: alertaFormateada });
+
     } catch (error) {
         return response.status(500).json({ error: "Error al emitir alerta", detalle: error.message });  
     }
@@ -40,7 +45,10 @@ async function obtenerAlerta(request, response) {
             return response.status(404).json({ message: 'Alerta no encontrada' });
         }
 
-        return response.status(200).json({ alertaEncontrada });
+        const alertaFormateada = alertaEncontrada.toJSON();
+        alertaFormateada.fecha_emision = formatTime(alertaFormateada.fecha_emision)
+
+        return response.status(200).json({ alertaEncontrada: alertaFormateada });
     } catch (error) {
         return response.status(500).json({ error: "Error al obtener alerta", detalle: error.message });
     }
@@ -65,7 +73,13 @@ async function obtenerAlertas(request, response) {
             order: [['fecha_emision', 'DESC']]
         });
 
-        return response.status(200).json({ alertasEncontradas });
+        const alertasFormateadas = alertasEncontradas.map(alerta => {
+            const alertaJson = alerta.toJSON();
+            alertaJson.fecha_emision = formatTime(alertaJson.fecha_emision);
+            return alertaJson;
+        });
+        
+        return response.status(200).json({ alertasEncontradas: alertasFormateadas });
     } catch (error) {
         return response.status(500).json({ error: "Error al obtener alertas", detalle: error.message });
     }

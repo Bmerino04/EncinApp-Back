@@ -1,5 +1,6 @@
 import db from '../models/index.js';
 const { anuncio } = db;
+import { formatTime } from '../utils/formatTime.js';
 
 /**
  * Crea un nuevo anuncio.
@@ -21,10 +22,13 @@ async function crearAnuncio(request, response) {
             tipo_multimedia: body.tipo_multimedia,
             fecha_relacionada: body.fecha_relacionada,
             direccion: body.direccion,
-            fecha_emision: body.fecha_emision,
             id_usuario: usuarioId,
         });
-        return response.status(201).json({anuncioCreado});
+
+        const anuncioFormateado = anuncioCreado.toJSON();
+        anuncioFormateado.fecha_emision = formatTime(anuncioFormateado.fecha_emision)
+
+        return response.status(201).json({anuncioCreado: anuncioFormateado});
     } catch(error){
         return response.status(500).json({error});
     }
@@ -47,7 +51,10 @@ async function obtenerAnuncio(request, response) {
             return response.status(404).json({message: 'Anuncio no encontrado'});
         }
 
-        return response.status(200).json({anuncioEncontrado});
+        const anuncioFormateado = anuncioEncontrado.toJSON();
+        anuncioFormateado.fecha_emision = formatTime(anuncioFormateado.fecha_emision)
+
+        return response.status(200).json({anuncioEncontrado: anuncioFormateado});
     } catch(error){
         return response.status(500).json({error});
     }
@@ -63,7 +70,14 @@ async function obtenerAnuncio(request, response) {
 async function obtenerAnuncios(request, response) {
     try{
         const anunciosEncontrados = await anuncio.findAll();
-        return response.status(200).json({anunciosEncontrados});
+
+        const anunciosFormateados = anunciosEncontrados.map(anuncio => {
+        const anuncioJson = anuncio.toJSON();
+        anuncioJson.fecha_emision = formatTime(anuncioJson.fecha_emision);
+        return anuncioJson;
+        });
+        
+        return response.status(200).json({anunciosEncontrados: anunciosFormateados});
     } catch(error){
         return response.status(500).json({error});
     }

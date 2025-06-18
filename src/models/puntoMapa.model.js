@@ -50,10 +50,9 @@ const PuntoMapa = sequelize.define(
     fecha_emision: {
       type: DataTypes.DATE,
       allowNull: true,
+      defaultValue: DataTypes.NOW, // Fecha de emisión por defecto es la fecha actual
     },
-
-
-
+    
 },
 /**
  * Configuración de tabla:

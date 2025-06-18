@@ -41,6 +41,7 @@ const Anuncio = sequelize.define(
     fecha_emision: {
       type: DataTypes.DATE,
       allowNull: false,
+      defaultValue: DataTypes.NOW, // Fecha de emisión por defecto es la fecha actual
     },
 },
 /**
