@@ -23,8 +23,10 @@ async function crearAlerta(request, response) {
 async function obtenerAlerta(request, response) {
     try {
         const alertaId = request.params.id;
+        const condicion = {origen_punto: 'alerta'};
 
         const alertaEncontrada = await puntoMapa.findByPk(alertaId, {
+            where: condicion,
             include: [
                 {
                     model: comentarioAlerta,
