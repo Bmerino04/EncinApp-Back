@@ -60,4 +60,23 @@ async function obtenerPuntosInteres(request, response) {
     }
 }
 
+async function eliminarPuntoInteres(request, response) {
+    try {
+        const puntoInteresId = request.params.id;
+
+        const puntoInteresEncontrado = await puntoMapa.findByPk(puntoInteresId);
+
+        if (!puntoInteresEncontrado) {
+            return response.status(404).json({ message: 'Punto de interés no encontrado' });
+        }
+
+        await puntoInteresEncontrado.destroy();
+
+        return response.status(200).json({ message: 'Punto de interés eliminado correctamente' });
+    } catch (error) {
+        return response.status(500).json({ error: "Error al eliminar punto de interés", detalle: error.message });
+    }
+    
+}
+
 export { crearPuntoInteres, obtenerPuntoInteres, obtenerPuntosInteres, eliminarPuntoInteres};
