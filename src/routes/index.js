@@ -3,7 +3,6 @@ import express from 'express';
 import usuarioRouter from './usuario.routes.js';
 import alertaRouter from './alertas.routes.js';
 import anuncioRouter from './anuncios.routes.js';
-
 import puntosInteresRouter from './puntosInteres.routes.js';
 import authRouter from './auth.routes.js';
 import permisosRouter from './permisos.routes.js';

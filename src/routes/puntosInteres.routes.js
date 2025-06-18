@@ -1,6 +1,16 @@
 import express from 'express';
+import { crearPuntoInteres, obtenerPuntoInteres, obtenerPuntosInteres, eliminarPuntoInteres} from '../controllers/puntoInteres.controller.js';
+import verificarToken from '../middleware/auth.middleware.js';
 
-const router = express.Router();
+const puntoInteresRouter = express.Router();
+puntoInteresRouter.use(verificarToken);
 
-// Por ahora no hay rutas definidas, pero se exporta para evitar errores
-export default router;
+puntoInteresRouter.post('/', crearPuntoInteres);
+
+puntoInteresRouter.get('/:id', obtenerPuntoInteres);
+
+puntoInteresRouter.get('/', obtenerPuntosInteres);
+
+puntoInteresRouter.delete('/:id', eliminarPuntoInteres);
+
+export default puntoInteresRouter;
