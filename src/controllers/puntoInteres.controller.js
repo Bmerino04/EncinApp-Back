@@ -1,6 +1,7 @@
-import { raw } from 'mysql2';
+import { where } from 'sequelize';
 import db from '../models/index.js';
 const { puntoMapa } = db;
+import {puntoMapaDistance, formatDistance} from '../utils/puntoMapaDistance.js';
 
 async function crearPuntoInteres(request, response) {
     try {
@@ -79,4 +80,44 @@ async function eliminarPuntoInteres(request, response) {
     
 }
 
-export { crearPuntoInteres, obtenerPuntoInteres, obtenerPuntosInteres, eliminarPuntoInteres};
+async function recomendarPuntoInteres(request, response) {
+    try{
+        const alertaId = request.params.id;
+
+        const alerta = await puntoMapa.findByPk(alertaId, {
+            where: { origen_punto: 'alerta' }
+        });
+
+        if (!alerta) {
+            return response.status(404).json({ message: 'Alerta no encontrada' });
+        }
+
+        const { latitud, longitud, tipo } = alerta;
+
+        const puntosInteres = await puntoMapa.findAll({
+            where: {
+                origen_punto: 'punto_interes',
+                tipo: tipo
+            }
+        });
+
+        const puntosRecomendados = puntosInteres.map(punto => {
+            const distanciaRaw = puntoMapaDistance(latitud, longitud, punto.latitud, punto.longitud);
+            return {
+                ...punto.toJSON(),
+                distancia: formatDistance(distanciaRaw),
+                distanciaValor: distanciaRaw
+            };
+        });
+        
+        puntosRecomendados.sort((a, b) => a.distanciaValor - b.distanciaValor);
+
+        const puntosFormateados = puntosRecomendados.map(({ distanciaValor, ... punto}) => punto);
+
+        return response.status(200).json({ puntosRecomendados:puntosFormateados});
+    } catch (error) {
+        return response.status(500).json({ error: "Error al recomendar puntos de interés", detalle: error.message });
+    }
+}
+
+export { crearPuntoInteres, obtenerPuntoInteres, obtenerPuntosInteres, eliminarPuntoInteres, recomendarPuntoInteres};
