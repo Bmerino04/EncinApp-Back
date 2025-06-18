@@ -12,13 +12,13 @@ const PuntoMapa = sequelize.define(
       primaryKey: true,
       autoIncrement:true,
       allowNull: false,
-    },   
+    },
+    origen_punto: {
+      type: DataTypes.ENUM('alerta', 'punto_interes'),
+      allowNull: false,
+    },  
     tipo: {
       type: DataTypes.ENUM('siniestro', 'salud', 'seguridad', 'otro'),
-      allowNull: false,
-    },
-    fecha_emision: {
-      type: DataTypes.DATE,
       allowNull: false,
     },
     longitud: {
@@ -29,6 +29,14 @@ const PuntoMapa = sequelize.define(
       type: DataTypes.FLOAT,
       allowNull: false,
     },
+    nombre: {
+      type: DataTypes.STRING(45),
+      allowNull: true,
+    },
+    contacto: {
+      type: DataTypes.STRING(45),
+      allowNull: true,
+    }, 
     estado_atendida:{
       type: DataTypes.TINYINT,
       defaultValue: 0, // 1 = atendida, 0 = no atendida
@@ -37,21 +45,14 @@ const PuntoMapa = sequelize.define(
     estado_actividad:{
       type: DataTypes.TINYINT,
       defaultValue: 1, // 1 = activo, 0 = inactivo
-      allowNull: true,
-     
+      allowNull: true,  
     },
-    contacto: {
-      type: DataTypes.STRING(45),
-      allowNull: true,
-    }, 
-    nombre: {
-      type: DataTypes.STRING(45),
+    fecha_emision: {
+      type: DataTypes.DATE,
       allowNull: true,
     },
-    origen_punto: {
-        type: DataTypes.ENUM('alerta', 'punto_interes'),
-        allowNull: false,
-    },
+
+
 
 },
 /**
