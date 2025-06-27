@@ -2,6 +2,14 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 dotenv.config();
 
+/**
+ * Middleware para verificar un token JWT y autorizar al usuario.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP con el token en el encabezado `Authorization`.
+ * @param {Response} response - Objeto de respuesta HTTP usado para devolver errores de autenticación.
+ * @param {NextFunction} next - Función para pasar al siguiente middleware si el token es válido.
+ * @returns {Promise<void>}
+ */
 export default async function verificarToken (request, response, next) {
     const token = request.headers['authorization'];
     if (!token) {

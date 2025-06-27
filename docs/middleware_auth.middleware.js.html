@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: models/comentarioAlerta.model.js</title>
+    <title>JSDoc: Source: middleware/auth.middleware.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: models/comentarioAlerta.model.js</h1>
+    <h1 class="page-title">Source: middleware/auth.middleware.js</h1>
 
     
 
@@ -26,86 +26,34 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Modelo comentarioAlerta
- * @module models/comentarioAlerta
- */
+            <pre class="prettyprint source linenums"><code>import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 /**
- * Modelo ComentarioAlerta
+ * Middleware para verificar un token JWT y autorizar al usuario.
  *
- * Representa un comentario de un usuario en las alertas emitidas.
- *
- * @param {Object} sequelize - Instancia de Sequelize.
- * @param {Object} DataTypes - Tipos de datos de Sequelize.
- * @returns {Object} Modelo ComentarioAlerta.
+ * @param {Request} request - Objeto de solicitud HTTP con el token en el encabezado `Authorization`.
+ * @param {Response} response - Objeto de respuesta HTTP usado para devolver errores de autenticación.
+ * @param {NextFunction} next - Función para pasar al siguiente middleware si el token es válido.
+ * @returns {Promise&lt;void>}
  */
-export default (sequelize, DataTypes) => {
-  const ComentarioAlerta = sequelize.define(
-    'comentarioAlerta',
-    {
-      /**
-       * ID del comentario (clave primaria, autoincremental).
-       * @type {number}
-       */
-      id_comentario: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        allowNull: false,
-      },
-
-      /**
-       * Contenido del comentario.
-       * @type {string}
-       */
-      contenido: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-
-      /**
-       * Fecha de emisión del comentario (por defecto fecha actual).
-       * @type {Date}
-       */
-      fecha_emision: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-    },
-    {
-      /**
-       * Configuración de la tabla:
-       * - tableName: fuerza el nombre de la tabla a 'comentario_alerta'.
-       * - timestamps: desactivado (no guarda fechas de creación/modificación).
-       * - freezeTableName: evita pluralizar el nombre de la tabla.
-       */
-      tableName: 'comentario_alerta',
-      timestamps: false,
-      freezeTableName: true,
+export default async function verificarToken (request, response, next) {
+    const token = request.headers['authorization'];
+    if (!token) {
+        return response.status(401).json({ message: 'No se ha enviado el token'});
     }
-  );
-
-  /**
-   * Define las asociaciones del modelo ComentarioAlerta con otros modelos.
-   *
-   * @param {Object} models - Los modelos disponibles para asociar.
-   */
-  ComentarioAlerta.associate = models => {
-    ComentarioAlerta.belongsTo(models.usuario, {
-      foreignKey: 'id_usuario',
-      as: 'usuario',
-    });
-
-    ComentarioAlerta.belongsTo(models.puntoMapa, {
-      foreignKey: 'id_punto_mapa',
-      as: 'puntoMapa',
-    });
-  };
-
-  return ComentarioAlerta;
-};</code></pre>
+    try {
+        const data = jwt.verify(token, process.env.JWT_SECRET);
+        request.user = {
+            id: data.id,
+            ...data
+        };
+        next();
+    } catch(error) {
+        return response.status(401).json({ message: 'Token inválido o expirado' });
+    }
+}</code></pre>
         </article>
     </section>
 

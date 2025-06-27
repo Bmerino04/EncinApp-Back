@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: models/comentarioAlerta.model.js</title>
+    <title>JSDoc: Source: controllers/tokenDispositivo.controller.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: models/comentarioAlerta.model.js</h1>
+    <h1 class="page-title">Source: controllers/tokenDispositivo.controller.js</h1>
 
     
 
@@ -26,86 +26,48 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Modelo comentarioAlerta
- * @module models/comentarioAlerta
+            <pre class="prettyprint source linenums"><code>import db from '../models/index.js';
+const { token_dispositivo } = db;
+
+/**
+ * @module controllers/tokenDispositivoController
  */
 
 /**
- * Modelo ComentarioAlerta
+ * Registra o actualiza el token de dispositivo FCM para el usuario autenticado.
  *
- * Representa un comentario de un usuario en las alertas emitidas.
+ * Este token representa el identificador único del dispositivo, utilizado para
+ * enviar notificaciones push mediante Firebase Cloud Messaging (FCM).
+ * Si el usuario ya tiene un token asociado, este se actualiza.
+ * De lo contrario, se crea un nuevo registro.
  *
- * @param {Object} sequelize - Instancia de Sequelize.
- * @param {Object} DataTypes - Tipos de datos de Sequelize.
- * @returns {Object} Modelo ComentarioAlerta.
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
  */
-export default (sequelize, DataTypes) => {
-  const ComentarioAlerta = sequelize.define(
-    'comentarioAlerta',
-    {
-      /**
-       * ID del comentario (clave primaria, autoincremental).
-       * @type {number}
-       */
-      id_comentario: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        allowNull: false,
-      },
+export async function registrarTokenDispositivo(req, res) {
+  const { token } = req.body;
+  const id_usuario = req.user.id;
 
-      /**
-       * Contenido del comentario.
-       * @type {string}
-       */
-      contenido: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
+  if (!token) {
+    return res.status(400).json({ error: 'Token es requerido' });
+  }
 
-      /**
-       * Fecha de emisión del comentario (por defecto fecha actual).
-       * @type {Date}
-       */
-      fecha_emision: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-    },
-    {
-      /**
-       * Configuración de la tabla:
-       * - tableName: fuerza el nombre de la tabla a 'comentario_alerta'.
-       * - timestamps: desactivado (no guarda fechas de creación/modificación).
-       * - freezeTableName: evita pluralizar el nombre de la tabla.
-       */
-      tableName: 'comentario_alerta',
-      timestamps: false,
-      freezeTableName: true,
+  try {
+    const existente = await token_dispositivo.findOne({ where: { id_usuario } });
+
+    if (existente) {
+      await existente.update({ token });
+    } else {
+      await token_dispositivo.create({ id_usuario, token });
     }
-  );
 
-  /**
-   * Define las asociaciones del modelo ComentarioAlerta con otros modelos.
-   *
-   * @param {Object} models - Los modelos disponibles para asociar.
-   */
-  ComentarioAlerta.associate = models => {
-    ComentarioAlerta.belongsTo(models.usuario, {
-      foreignKey: 'id_usuario',
-      as: 'usuario',
-    });
-
-    ComentarioAlerta.belongsTo(models.puntoMapa, {
-      foreignKey: 'id_punto_mapa',
-      as: 'puntoMapa',
-    });
-  };
-
-  return ComentarioAlerta;
-};</code></pre>
+    return res.status(200).json({ mensaje: 'Token guardado correctamente' });
+  } catch (error) {
+    console.error('Error al registrar token:', error);
+    return res.status(500).json({ error: 'Error al registrar token', detalle: error.message });
+  }
+}</code></pre>
         </article>
     </section>
 

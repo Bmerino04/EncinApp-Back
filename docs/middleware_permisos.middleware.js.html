@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: models/comentarioAlerta.model.js</title>
+    <title>JSDoc: Source: middleware/permisos.middleware.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: models/comentarioAlerta.model.js</h1>
+    <h1 class="page-title">Source: middleware/permisos.middleware.js</h1>
 
     
 
@@ -26,86 +26,47 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Modelo comentarioAlerta
- * @module models/comentarioAlerta
- */
+            <pre class="prettyprint source linenums"><code>import db from '../models/index.js';
+const { usuario, permiso } = db;
 
 /**
- * Modelo ComentarioAlerta
+ * Middleware para verificar si el usuario tiene un permiso específico.
  *
- * Representa un comentario de un usuario en las alertas emitidas.
- *
- * @param {Object} sequelize - Instancia de Sequelize.
- * @param {Object} DataTypes - Tipos de datos de Sequelize.
- * @returns {Object} Modelo ComentarioAlerta.
+ * @param {string} nombrePermisoRequerido - Nombre del permiso requerido para acceder al recurso.
+ * @returns {function(Request, Response, NextFunction): Promise&lt;void>}
  */
-export default (sequelize, DataTypes) => {
-  const ComentarioAlerta = sequelize.define(
-    'comentarioAlerta',
-    {
-      /**
-       * ID del comentario (clave primaria, autoincremental).
-       * @type {number}
-       */
-      id_comentario: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
-        allowNull: false,
-      },
+export default function verificarPermiso(nombrePermisoRequerido) {
+    return async (request, response, next) => {
+        try {
+            const usuarioId = request.user.id; // Asumiendo que el ID del usuario está en request.user.id
 
-      /**
-       * Contenido del comentario.
-       * @type {string}
-       */
-      contenido: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
+            const usuarioEncontrado = await usuario.findByPk(usuarioId, {
+                include: {
+                    model: permiso,
+                    as: 'permisos',
+                    attributes: ['nombre'],
+                    through: {
+                        attributes: [] 
+                    }
+                }
+            });
 
-      /**
-       * Fecha de emisión del comentario (por defecto fecha actual).
-       * @type {Date}
-       */
-      fecha_emision: {
-        type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW,
-      },
-    },
-    {
-      /**
-       * Configuración de la tabla:
-       * - tableName: fuerza el nombre de la tabla a 'comentario_alerta'.
-       * - timestamps: desactivado (no guarda fechas de creación/modificación).
-       * - freezeTableName: evita pluralizar el nombre de la tabla.
-       */
-      tableName: 'comentario_alerta',
-      timestamps: false,
-      freezeTableName: true,
+            if (!usuarioEncontrado) {
+                return response.status(404).json({ message: 'Usuario no encontrado' });
+            }
+
+            const permisosUsuario = usuarioEncontrado.permisos.some(p => p.nombre === nombrePermisoRequerido);
+
+            if (!permisosUsuario) {
+                return response.status(403).json({ message: 'Permiso denegado' });
+            }
+
+            next();
+        } catch (error) {
+            return response.status(500).json({ error: 'Error al verificar permisos',detalle: error.message });
+        }
     }
-  );
-
-  /**
-   * Define las asociaciones del modelo ComentarioAlerta con otros modelos.
-   *
-   * @param {Object} models - Los modelos disponibles para asociar.
-   */
-  ComentarioAlerta.associate = models => {
-    ComentarioAlerta.belongsTo(models.usuario, {
-      foreignKey: 'id_usuario',
-      as: 'usuario',
-    });
-
-    ComentarioAlerta.belongsTo(models.puntoMapa, {
-      foreignKey: 'id_punto_mapa',
-      as: 'puntoMapa',
-    });
-  };
-
-  return ComentarioAlerta;
-};</code></pre>
+}</code></pre>
         </article>
     </section>
 

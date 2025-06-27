@@ -28,6 +28,11 @@
         <article>
             <pre class="prettyprint source linenums"><code>import db from '../models/index.js';
 const { anuncio } = db;
+import { formatTime } from '../utils/formatTime.js';
+
+/**
+ * @module controllers/anuncioController
+ */
 
 /**
  * Crea un nuevo anuncio.
@@ -38,7 +43,9 @@ const { anuncio } = db;
  */
 async function crearAnuncio(request, response) {
     try{
+
         const body = request.body;
+        const usuarioId = request.user.id;
 
         const anuncioCreado = await anuncio.create({
             titulo: body.titulo,
@@ -47,9 +54,13 @@ async function crearAnuncio(request, response) {
             tipo_multimedia: body.tipo_multimedia,
             fecha_relacionada: body.fecha_relacionada,
             direccion: body.direccion,
-            fecha_emision: body.fecha_emision,
+            id_usuario: usuarioId,
         });
-        return response.status(201).json({anuncioCreado});
+
+        const anuncioFormateado = anuncioCreado.toJSON();
+        anuncioFormateado.fecha_emision = formatTime(anuncioFormateado.fecha_emision)
+
+        return response.status(201).json({anuncioCreado: anuncioFormateado});
     } catch(error){
         return response.status(500).json({error});
     }
@@ -72,7 +83,10 @@ async function obtenerAnuncio(request, response) {
             return response.status(404).json({message: 'Anuncio no encontrado'});
         }
 
-        return response.status(200).json({anuncioEncontrado});
+        const anuncioFormateado = anuncioEncontrado.toJSON();
+        anuncioFormateado.fecha_emision = formatTime(anuncioFormateado.fecha_emision)
+
+        return response.status(200).json({anuncioEncontrado: anuncioFormateado});
     } catch(error){
         return response.status(500).json({error});
     }
@@ -88,7 +102,14 @@ async function obtenerAnuncio(request, response) {
 async function obtenerAnuncios(request, response) {
     try{
         const anunciosEncontrados = await anuncio.findAll();
-        return response.status(200).json({anunciosEncontrados});
+
+        const anunciosFormateados = anunciosEncontrados.map(anuncio => {
+        const anuncioJson = anuncio.toJSON();
+        anuncioJson.fecha_emision = formatTime(anuncioJson.fecha_emision);
+        return anuncioJson;
+        });
+        
+        return response.status(200).json({anunciosEncontrados: anunciosFormateados});
     } catch(error){
         return response.status(500).json({error});
     }
@@ -105,7 +126,7 @@ async function eliminarAnuncio(request, response) {
     try{
         const anuncioId = request.params.id;
 
-        await anuncio.destroy({ where: { id: usuarioId } });
+        await anuncio.destroy({ where: { id_anuncio: anuncioId } });
         return response.status(200).json({message: 'Anuncio eliminado'});
     }catch(error){
         return response.status(500).json({error});
@@ -125,13 +146,13 @@ export { crearAnuncio, obtenerAnuncio, obtenerAnuncios, eliminarAnuncio };
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#actualizarDisponibilidad">actualizarDisponibilidad</a></li><li><a href="global.html#actualizarUsuario">actualizarUsuario</a></li><li><a href="global.html#crearAnuncio">crearAnuncio</a></li><li><a href="global.html#crearComentarioAlerta">crearComentarioAlerta</a></li><li><a href="global.html#crearUsuario">crearUsuario</a></li><li><a href="global.html#eliminarAnuncio">eliminarAnuncio</a></li><li><a href="global.html#eliminarComentarioAlerta">eliminarComentarioAlerta</a></li><li><a href="global.html#eliminarUsuario">eliminarUsuario</a></li><li><a href="global.html#obtenerAnuncio">obtenerAnuncio</a></li><li><a href="global.html#obtenerAnuncios">obtenerAnuncios</a></li><li><a href="global.html#obtenerComentariosAlertas">obtenerComentariosAlertas</a></li><li><a href="global.html#obtenerUsuario">obtenerUsuario</a></li><li><a href="global.html#obtenerUsuarios">obtenerUsuarios</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_alertaController.html">controllers/alertaController</a></li><li><a href="module-controllers_anuncioController.html">controllers/anuncioController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_comentarioAlertaController.html">controllers/comentarioAlertaController</a></li><li><a href="module-controllers_permisosController.html">controllers/permisosController</a></li><li><a href="module-controllers_puntoInteresController.html">controllers/puntoInteresController</a></li><li><a href="module-controllers_tokenDispositivoController.html">controllers/tokenDispositivoController</a></li><li><a href="module-controllers_usuarioController.html">controllers/usuarioController</a></li><li><a href="module-models_anuncio.html">models/anuncio</a></li><li><a href="module-models_comentarioAlerta.html">models/comentarioAlerta</a></li><li><a href="module-models_permiso.html">models/permiso</a></li><li><a href="module-models_puntoMapa.html">models/puntoMapa</a></li><li><a href="module-models_tokenDispositivo.html">models/tokenDispositivo</a></li><li><a href="module-models_usuario.html">models/usuario</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Sun May 25 2025 16:39:56 GMT-0400 (hora estándar de Chile)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 02:32:48 GMT-0400 (hora estándar de Chile)
 </footer>
 
 <script> prettyPrint(); </script>
