@@ -1,5 +1,9 @@
 /**
  * Modelo TokenDispositivo
+ * @module models/tokenDispositivo
+ */
+
+/**
  *
  * Representa el token de dispositivo de un usuario, utilizado para enviar notificaciones
  * push mediante Firebase Cloud Messaging (FCM). Cada usuario puede tener un token asociado,

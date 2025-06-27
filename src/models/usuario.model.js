@@ -1,78 +1,118 @@
+/**
+ * Modelo TokenDispositivo
+ * @module models/usuario
+ */
 
 /**
- * Modelo Usuario
+ * Representa a un usuario del sistema, incluyendo sus datos personales,
+ * estado y relaciones con otros modelos.
  *
- * Representa a un usuario del sistema, incluyendo sus datos personales, estado y relaciones con otros modelos.
- * 
+ * @param {Object} sequelize - Instancia de Sequelize.
+ * @param {Object} DataTypes - Tipos de datos de Sequelize.
+ * @returns {Object} Modelo Usuario.
  */
+export default (sequelize, DataTypes) => {
+  const Usuario = sequelize.define(
+    'usuario',
+    {
+      /**
+       * ID del usuario (clave primaria, autoincremental).
+       * @type {number}
+       */
+      id_usuario: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
 
-export default (sequelize, DataTypes) =>    {
-const Usuario = sequelize.define(
-  'usuario',
-  {
-    id_usuario: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement:true,
-      allowNull: false,
-    },
-    nombre: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    rut: {
-      type: DataTypes.STRING(10),
-      allowNull: false,
-    },
-    pin: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    es_presidente: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    disponibilidad: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    direccion: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
+      /**
+       * Nombre completo del usuario.
+       * @type {string}
+       */
+      nombre: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
 
-/**
- * Configuración de tabla:
- * - tableName: fuerza el nombre de la tabla a 'usuario'
- * - timestamps: desactivado (no guarda las fechas de creacion o modificacion)
- * - freezeTableName: evita pluralizar el nombre de la tabla
- * - paranoid: activo (usa soft delete)
-*/    
-},
-  {
-    tableName:'usuario',
-    timestamps: false,
-    freezeTableName:true,
-    paranoid: true,
-  },
-);
+      /**
+       * RUT del usuario (identificación única).
+       * @type {string}
+       */
+      rut: {
+        type: DataTypes.STRING(10),
+        allowNull: false,
+      },
 
-/**
- * Asociaciones:
- */
-Usuario.associate = models => {
-  Usuario.hasMany(models.puntoMapa, {
-    foreignKey: 'id_usuario',
-    as: 'puntosMapa'
-  });
-  Usuario.hasMany(models.comentarioAlerta, {
-    foreignKey: 'id_usuario',
-    as: 'comentariosAlerta'
-  });
-  Usuario.hasMany(models.anuncio, {
-    foreignKey: 'id_usuario',
-    as: 'anuncios'
-  });
+      /**
+       * PIN cifrado del usuario para autenticación.
+       * @type {string}
+       */
+      pin: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
+      /**
+       * Indica si el usuario es presidente.
+       * @type {boolean}
+       */
+      es_presidente: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+
+      /**
+       * Disponibilidad del usuario (activo/inactivo).
+       * @type {boolean}
+       */
+      disponibilidad: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+
+      /**
+       * Dirección física del usuario.
+       * @type {string}
+       */
+      direccion: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+    },
+    {
+      /**
+       * Configuración de la tabla:
+       * - tableName: fuerza el nombre de la tabla a 'usuario'.
+       * - timestamps: desactivado (no guarda fechas de creación/modificación).
+       * - freezeTableName: evita pluralizar el nombre de la tabla.
+       * - paranoid: activo (uso de soft delete).
+       */
+      tableName: 'usuario',
+      timestamps: false,
+      freezeTableName: true,
+      paranoid: true,
+    }
+  );
+
+  /**
+   * Define las asociaciones del modelo Usuario con otros modelos.
+   *
+   * @param {Object} models - Los modelos disponibles para asociar.
+   */
+  Usuario.associate = models => {
+    Usuario.hasMany(models.puntoMapa, {
+      foreignKey: 'id_usuario',
+      as: 'puntosMapa',
+    });
+    Usuario.hasMany(models.comentarioAlerta, {
+      foreignKey: 'id_usuario',
+      as: 'comentariosAlerta',
+    });
+    Usuario.hasMany(models.anuncio, {
+      foreignKey: 'id_usuario',
+      as: 'anuncios',
+    });
 
   Usuario.belongsToMany(models.permiso, { 
     through: 'usuario_permiso',

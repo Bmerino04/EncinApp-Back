@@ -2,6 +2,9 @@ import db from '../models/index.js';
 const { usuario } = db;
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+/**
+ * @module controllers/authController
+ */
 
 /**
  * Inicia sesión de un usuario autenticando su RUT y PIN.

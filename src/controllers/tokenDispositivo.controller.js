@@ -2,6 +2,10 @@ import db from '../models/index.js';
 const { token_dispositivo } = db;
 
 /**
+ * @module controllers/tokenDispositivoController
+ */
+
+/**
  * Registra o actualiza el token de dispositivo FCM para el usuario autenticado.
  *
  * Este token representa el identificador único del dispositivo, utilizado para

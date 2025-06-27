@@ -3,6 +3,10 @@ import bcrypt from 'bcryptjs';
 const { usuario } = db;
 
 /**
+ * @module controllers/usuarioController
+ */
+
+/**
  * Crea un nuevo usuario.
  *
  * @param {Request} request - Objeto de solicitud HTTP.

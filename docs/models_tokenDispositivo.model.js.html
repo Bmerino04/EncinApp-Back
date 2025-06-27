@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: middleware/auth.middleware.js</title>
+    <title>JSDoc: Source: models/tokenDispositivo.model.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: middleware/auth.middleware.js</h1>
+    <h1 class="page-title">Source: models/tokenDispositivo.model.js</h1>
 
     
 
@@ -26,34 +26,75 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-dotenv.config();
+            <pre class="prettyprint source linenums"><code>/**
+ * Modelo TokenDispositivo
+ * @module models/tokenDispositivo
+ */
 
 /**
- * Middleware para verificar un token JWT y autorizar al usuario.
  *
- * @param {Request} request - Objeto de solicitud HTTP con el token en el encabezado `Authorization`.
- * @param {Response} response - Objeto de respuesta HTTP usado para devolver errores de autenticación.
- * @param {NextFunction} next - Función para pasar al siguiente middleware si el token es válido.
- * @returns {Promise&lt;void>}
+ * Representa el token de dispositivo de un usuario, utilizado para enviar notificaciones
+ * push mediante Firebase Cloud Messaging (FCM). Cada usuario puede tener un token asociado,
+ * que corresponde al identificador único del dispositivo.
+ *
+ * @param {Object} sequelize - Instancia de Sequelize.
+ * @param {Object} DataTypes - Tipos de datos de Sequelize.
+ * @returns {Object} Modelo TokenDispositivo.
  */
-export default async function verificarToken (request, response, next) {
-    const token = request.headers['authorization'];
-    if (!token) {
-        return response.status(401).json({ message: 'No se ha enviado el token'});
+export default (sequelize, DataTypes) => {
+  const TokenDispositivo = sequelize.define(
+    'token_dispositivo',
+    {
+      /**
+       * ID del token (clave primaria, autoincremental).
+       * @type {number}
+       */
+      id_token: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
+
+      /**
+       * ID del usuario al que pertenece el token.
+       * @type {number}
+       */
+      id_usuario: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+
+      /**
+       * Token del dispositivo (generalmente token FCM).
+       * @type {string}
+       */
+      token: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+    },
+    {
+      tableName: 'token_dispositivo',
+      timestamps: false,
+      freezeTableName: true,
     }
-    try {
-        const data = jwt.verify(token, process.env.JWT_SECRET);
-        request.user = {
-            id: data.id,
-            ...data
-        };
-        next();
-    } catch(error) {
-        return response.status(401).json({ message: 'Token inválido o expirado' });
-    }
-}</code></pre>
+  );
+
+  /**
+   * Define las asociaciones del modelo.
+   *
+   * @param {Object} models - Los modelos disponibles para asociar.
+   */
+  TokenDispositivo.associate = models => {
+    TokenDispositivo.belongsTo(models.usuario, {
+      foreignKey: 'id_usuario',
+      as: 'usuario',
+    });
+  };
+
+  return TokenDispositivo;
+};</code></pre>
         </article>
     </section>
 

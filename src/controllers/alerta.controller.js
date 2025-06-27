@@ -3,6 +3,10 @@ const { puntoMapa, comentarioAlerta } = db;
 import { formatTime } from '../utils/formatTime.js';
 
 /**
+ * @module controllers/alertaController
+ */
+
+/**
  * Crea una nueva alerta.
  *
  * @param {Request} request - Objeto de solicitud HTTP.

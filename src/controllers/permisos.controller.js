@@ -2,6 +2,10 @@ import db from "../models/index.js";
 const { usuario, permiso } = db;
 
 /**
+ * @module controllers/permisosController
+ */
+
+/**
  * Obtiene los permisos asignados a un usuario por su ID.
  *
  * @param {Request} request - Objeto de solicitud HTTP, debe contener `id` como parámetro.

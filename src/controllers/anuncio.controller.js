@@ -3,6 +3,10 @@ const { anuncio } = db;
 import { formatTime } from '../utils/formatTime.js';
 
 /**
+ * @module controllers/anuncioController
+ */
+
+/**
  * Crea un nuevo anuncio.
  *
  * @param {Request} request - Objeto de solicitud HTTP.

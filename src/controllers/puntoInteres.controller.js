@@ -2,6 +2,9 @@ import db from '../models/index.js';
 const { puntoMapa } = db;
 import {puntoMapaDistance, formatDistance} from '../utils/puntoMapaDistance.js';
 
+/**
+ * @module controllers/puntoInteresController
+ */
 
 /**
  * Crea un nuevo punto de interés.
