@@ -5,9 +5,9 @@
  * push mediante Firebase Cloud Messaging (FCM). Cada usuario puede tener un token asociado,
  * que corresponde al identificador único del dispositivo.
  *
- * @param {import('sequelize').Sequelize} sequelize - Instancia de Sequelize.
- * @param {import('sequelize').DataTypes} DataTypes - Tipos de datos de Sequelize.
- * @returns {import('sequelize').Model} Modelo TokenDispositivo.
+ * @param {Object} sequelize - Instancia de Sequelize.
+ * @param {Object} DataTypes - Tipos de datos de Sequelize.
+ * @returns {Object} Modelo TokenDispositivo.
  */
 export default (sequelize, DataTypes) => {
   const TokenDispositivo = sequelize.define(
