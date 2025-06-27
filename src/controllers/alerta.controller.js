@@ -2,6 +2,13 @@ import db from '../models/index.js';
 const { puntoMapa, comentarioAlerta } = db;
 import { formatTime } from '../utils/formatTime.js';
 
+/**
+ * Crea una nueva alerta.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 async function crearAlerta(request, response) {
     try {
         const body = request.body;
@@ -25,6 +32,13 @@ async function crearAlerta(request, response) {
     }
 }
 
+/**
+ * Obtiene una alerta por su ID.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 async function obtenerAlerta(request, response) {
     try {
         const alertaId = request.params.id;
@@ -54,6 +68,14 @@ async function obtenerAlerta(request, response) {
     }
 }
 
+
+/**
+ * Obtiene una lista de alertas filtradas por estado o si fueron atendidas.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 async function obtenerAlertas(request, response) {
     try {
         const { estado, atendida } = request.query;
@@ -85,6 +107,12 @@ async function obtenerAlertas(request, response) {
     }
 }
 
+/**
+ * Desactiva una alerta marcando su estado como inactivo.
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise<void>}
+ */
 async function desactivarAlerta(request, response) {
     try {
         const alertaId = request.params.id;

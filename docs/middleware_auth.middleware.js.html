@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: models/comentarioAlerta.model.js</title>
+    <title>JSDoc: Source: middleware/auth.middleware.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: models/comentarioAlerta.model.js</h1>
+    <h1 class="page-title">Source: middleware/auth.middleware.js</h1>
 
     
 
@@ -26,59 +26,34 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Modelo comentarioAlerta
+            <pre class="prettyprint source linenums"><code>import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
+
+/**
+ * Middleware para verificar un token JWT y autorizar al usuario.
  *
- * Representa los comentario un usuario en las alertas emitidas.
- * 
+ * @param {Request} request - Objeto de solicitud HTTP con el token en el encabezado `Authorization`.
+ * @param {Response} response - Objeto de respuesta HTTP usado para devolver errores de autenticación.
+ * @param {.NextFunction} next - Función para pasar al siguiente middleware si el token es válido.
+ * @returns {Promise&lt;void>}
  */
-export default  (sequelize, DataTypes) => {
-const ComentarioAlerta = sequelize.define(
-  'comentarioAlerta',
-  {
-    id_comentario: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement:true,
-      allowNull: false,
-    },     
-    contenido: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    fecha_emision: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW, // Fecha de emisión por defecto es la fecha actual
-    },
-},
-/**
- * Configuración de tabla:
- * - tableName: fuerza el nombre de la tabla a 'usuario'
- * - timestamps: desactivado (no guarda las fechas de creacion o modificacion)
- * - freezeTableName: evita pluralizar el nombre de la tabla
-*/ 
-  {
-    tableName:'comentario_alerta',
-    timestamps: false,
-    freezeTableName:true,
-  },
-);
-/**
- * Asociaciones:
- */
-ComentarioAlerta.associate = models =>{
-    ComentarioAlerta.belongsTo(models.usuario, {
-      foreignKey : 'id_usuario',
-      as: 'usuario',
-    });
-    ComentarioAlerta.belongsTo(models.puntoMapa, {
-      foreignKey : 'id_punto_mapa',
-      as: 'puntoMapa',
-    });
-};
-return ComentarioAlerta;
-};</code></pre>
+export default async function verificarToken (request, response, next) {
+    const token = request.headers['authorization'];
+    if (!token) {
+        return response.status(401).json({ message: 'No se ha enviado el token'});
+    }
+    try {
+        const data = jwt.verify(token, process.env.JWT_SECRET);
+        request.user = {
+            id: data.id,
+            ...data
+        };
+        next();
+    } catch(error) {
+        return response.status(401).json({ message: 'Token inválido o expirado' });
+    }
+}</code></pre>
         </article>
     </section>
 

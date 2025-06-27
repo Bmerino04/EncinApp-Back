@@ -1,6 +1,11 @@
 import db from '../models/index.js';
 const { usuario } = db;
 
+/**
+ * Middleware que permite el acceso solo a usuarios con rol de presidente (`es_presidente = true`).
+ *
+ * @returns {function(Request, Response, NextFunction): Promise<void>}
+ */
 export default function verificarPresidencia() {
     return async (request, response, next) => {
         try{

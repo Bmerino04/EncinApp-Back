@@ -1,4 +1,32 @@
-import db from '../models/index.js';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/puntoInteres.controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/puntoInteres.controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import db from '../models/index.js';
 const { puntoMapa } = db;
 import {puntoMapaDistance, formatDistance} from '../utils/puntoMapaDistance.js';
 
@@ -8,7 +36,7 @@ import {puntoMapaDistance, formatDistance} from '../utils/puntoMapaDistance.js';
  * 
  * @param {Request} request - Solicitud HTTP con los datos del punto en `body`.
  * @param {Response} response - Respuesta HTTP con el punto creado.
- * @returns {Promise<void>}
+ * @returns {Promise&lt;void>}
  */
 async function crearPuntoInteres(request, response) {
     try {
@@ -36,7 +64,7 @@ async function crearPuntoInteres(request, response) {
  * 
  * @param {Request} request - Solicitud HTTP con `id` en los parámetros.
  * @param {Response} response - Respuesta HTTP con el punto encontrado.
- * @returns {Promise<void>}
+ * @returns {Promise&lt;void>}
  */
 async function obtenerPuntoInteres(request, response) {
     try {
@@ -60,9 +88,9 @@ async function obtenerPuntoInteres(request, response) {
 /**
  * Obtiene todos los puntos de interés, opcionalmente filtrados por tipo.
  * 
- * @param {Request} request - Solicitud HTTP con `tipo` en la query (opcional).
+ * @param {.Request} request - Solicitud HTTP con `tipo` en la query (opcional).
  * @param {Response} response - Respuesta HTTP con la lista de puntos encontrados.
- * @returns {Promise<void>}
+ * @returns {Promise&lt;void>}
  */
 async function obtenerPuntosInteres(request, response) {
     try {
@@ -88,7 +116,7 @@ async function obtenerPuntosInteres(request, response) {
  * 
  * @param {Request} request - Solicitud HTTP con `id` en los parámetros.
  * @param {Response} response - Respuesta HTTP con el estado de eliminación.
- * @returns {Promise<void>}
+ * @returns {Promise&lt;void>}
  */
 async function eliminarPuntoInteres(request, response) {
     try {
@@ -114,7 +142,7 @@ async function eliminarPuntoInteres(request, response) {
  * 
  * @param {Request} request - Solicitud HTTP con `id` de la alerta en los parámetros.
  * @param {Response} response - Respuesta HTTP con puntos recomendados ordenados por cercanía.
- * @returns {Promise<void>}
+ * @returns {Promise&lt;void>}
  */
 async function recomendarPuntoInteres(request, response) {
     try{
@@ -157,3 +185,26 @@ async function recomendarPuntoInteres(request, response) {
 }
 
 export { crearPuntoInteres, obtenerPuntoInteres, obtenerPuntosInteres, eliminarPuntoInteres, recomendarPuntoInteres};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#actualizarDisponibilidad">actualizarDisponibilidad</a></li><li><a href="global.html#actualizarPermisosUsuario">actualizarPermisosUsuario</a></li><li><a href="global.html#actualizarUsuario">actualizarUsuario</a></li><li><a href="global.html#crearAlerta">crearAlerta</a></li><li><a href="global.html#crearAnuncio">crearAnuncio</a></li><li><a href="global.html#crearComentarioAlerta">crearComentarioAlerta</a></li><li><a href="global.html#crearPuntoInteres">crearPuntoInteres</a></li><li><a href="global.html#desactivarAlerta">desactivarAlerta</a></li><li><a href="global.html#eliminarAnuncio">eliminarAnuncio</a></li><li><a href="global.html#eliminarComentarioAlerta">eliminarComentarioAlerta</a></li><li><a href="global.html#eliminarPuntoInteres">eliminarPuntoInteres</a></li><li><a href="global.html#eliminarUsuario">eliminarUsuario</a></li><li><a href="global.html#obtenerAlerta">obtenerAlerta</a></li><li><a href="global.html#obtenerAlertas">obtenerAlertas</a></li><li><a href="global.html#obtenerAnuncio">obtenerAnuncio</a></li><li><a href="global.html#obtenerAnuncios">obtenerAnuncios</a></li><li><a href="global.html#obtenerComentariosAlerta">obtenerComentariosAlerta</a></li><li><a href="global.html#obtenerPermisosUsuario">obtenerPermisosUsuario</a></li><li><a href="global.html#obtenerPuntoInteres">obtenerPuntoInteres</a></li><li><a href="global.html#obtenerPuntosInteres">obtenerPuntosInteres</a></li><li><a href="global.html#obtenerUsuario">obtenerUsuario</a></li><li><a href="global.html#obtenerUsuarios">obtenerUsuarios</a></li><li><a href="global.html#recomendarPuntoInteres">recomendarPuntoInteres</a></li><li><a href="global.html#registrarTokenDispositivo">registrarTokenDispositivo</a></li><li><a href="global.html#registrarUsuario">registrarUsuario</a></li><li><a href="global.html#transferirPresidencia">transferirPresidencia</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 00:52:09 GMT-0400 (hora estándar de Chile)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

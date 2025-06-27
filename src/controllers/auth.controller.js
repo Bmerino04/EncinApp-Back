@@ -3,6 +3,13 @@ const { usuario } = db;
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
+/**
+ * Inicia sesión de un usuario autenticando su RUT y PIN.
+ * 
+ * @param {Request} request - Objeto de solicitud HTTP con los campos `rut` y `pin` en el cuerpo.
+ * @param {Response} response - Objeto de respuesta HTTP que retorna un token JWT y los datos del usuario si la autenticación es exitosa.
+ * @returns {Promise<void>}
+ */
 export default async function iniciarSesion(request, response) {
     try{
         const {rut, pin} = request.body;

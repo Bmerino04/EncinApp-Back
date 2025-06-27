@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: models/comentarioAlerta.model.js</title>
+    <title>JSDoc: Source: middleware/presidencia.middleware.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: models/comentarioAlerta.model.js</h1>
+    <h1 class="page-title">Source: middleware/presidencia.middleware.js</h1>
 
     
 
@@ -26,59 +26,36 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Modelo comentarioAlerta
+            <pre class="prettyprint source linenums"><code>import db from '../models/index.js';
+const { usuario } = db;
+
+/**
+ * Middleware que permite el acceso solo a usuarios con rol de presidente (`es_presidente = true`).
  *
- * Representa los comentario un usuario en las alertas emitidas.
- * 
+ * @returns {function(Request, Response, NextFunction): Promise&lt;void>}
  */
-export default  (sequelize, DataTypes) => {
-const ComentarioAlerta = sequelize.define(
-  'comentarioAlerta',
-  {
-    id_comentario: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement:true,
-      allowNull: false,
-    },     
-    contenido: {
-      type: DataTypes.TEXT,
-      allowNull: false,
-    },
-    fecha_emision: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      defaultValue: DataTypes.NOW, // Fecha de emisión por defecto es la fecha actual
-    },
-},
-/**
- * Configuración de tabla:
- * - tableName: fuerza el nombre de la tabla a 'usuario'
- * - timestamps: desactivado (no guarda las fechas de creacion o modificacion)
- * - freezeTableName: evita pluralizar el nombre de la tabla
-*/ 
-  {
-    tableName:'comentario_alerta',
-    timestamps: false,
-    freezeTableName:true,
-  },
-);
-/**
- * Asociaciones:
- */
-ComentarioAlerta.associate = models =>{
-    ComentarioAlerta.belongsTo(models.usuario, {
-      foreignKey : 'id_usuario',
-      as: 'usuario',
-    });
-    ComentarioAlerta.belongsTo(models.puntoMapa, {
-      foreignKey : 'id_punto_mapa',
-      as: 'puntoMapa',
-    });
-};
-return ComentarioAlerta;
-};</code></pre>
+export default function verificarPresidencia() {
+    return async (request, response, next) => {
+        try{
+            const usuarioId = request.user.id;
+
+            const usuarioEncontrado =  await  usuario.findByPk(usuarioId)
+
+            if (!usuarioEncontrado) {
+                return response.status(404).json({ message: 'Usuario no encontrado' });
+            }
+
+            if (usuarioEncontrado.es_presidente) {
+                next();
+            } else {
+                return response.status(403).json({ message: 'No tienes permisos de presidencia' });
+            }     
+
+        } catch (error) {
+            return response.status(500).json({ error: 'Error al verificar la presidencia', detalle: error.message });
+        }   
+    }
+}</code></pre>
         </article>
     </section>
 

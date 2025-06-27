@@ -1,6 +1,12 @@
 import db from '../models/index.js';
 const { usuario, permiso } = db;
 
+/**
+ * Middleware para verificar si el usuario tiene un permiso específico.
+ *
+ * @param {string} nombrePermisoRequerido - Nombre del permiso requerido para acceder al recurso.
+ * @returns {function(Request, Response, NextFunction): Promise<void>}
+ */
 export default function verificarPermiso(nombrePermisoRequerido) {
     return async (request, response, next) => {
         try {

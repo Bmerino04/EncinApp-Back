@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: controllers/anuncio.controller.js</title>
+    <title>JSDoc: Source: controllers/alerta.controller.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: controllers/anuncio.controller.js</h1>
+    <h1 class="page-title">Source: controllers/alerta.controller.js</h1>
 
     
 
@@ -27,112 +27,140 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import db from '../models/index.js';
-const { anuncio } = db;
+const { puntoMapa, comentarioAlerta } = db;
 import { formatTime } from '../utils/formatTime.js';
 
 /**
- * Crea un nuevo anuncio.
+ * Crea una nueva alerta.
  *
  * @param {Request} request - Objeto de solicitud HTTP.
  * @param {Response} response - Objeto de respuesta HTTP.
  * @returns {Promise&lt;void>}
  */
-async function crearAnuncio(request, response) {
-    try{
-
+async function crearAlerta(request, response) {
+    try {
         const body = request.body;
         const usuarioId = request.user.id;
 
-        const anuncioCreado = await anuncio.create({
-            titulo: body.titulo,
-            cuerpo: body.cuerpo,
-            multimedia_url: body.multimedia_url,
-            tipo_multimedia: body.tipo_multimedia,
-            fecha_relacionada: body.fecha_relacionada,
-            direccion: body.direccion,
+        const alertaCreada = await puntoMapa.create({
+            origen_punto: 'alerta',
+            tipo: body.tipo,
+            latitud: body.latitud,
+            longitud: body.longitud,
             id_usuario: usuarioId,
         });
+        
+        const alertaFormateada = alertaCreada.toJSON();
+        alertaFormateada.fecha_emision = formatTime(alertaFormateada.fecha_emision)
+    
+        return response.status(201).json({ alertaCreada: alertaFormateada });
 
-        const anuncioFormateado = anuncioCreado.toJSON();
-        anuncioFormateado.fecha_emision = formatTime(anuncioFormateado.fecha_emision)
-
-        return response.status(201).json({anuncioCreado: anuncioFormateado});
-    } catch(error){
-        return response.status(500).json({error});
+    } catch (error) {
+        return response.status(500).json({ error: "Error al emitir alerta", detalle: error.message });  
     }
 }
 
 /**
- * Obtiene un anuncio por su ID.
+ * Obtiene una alerta por su ID.
  *
  * @param {Request} request - Objeto de solicitud HTTP.
  * @param {Response} response - Objeto de respuesta HTTP.
  * @returns {Promise&lt;void>}
  */
-async function obtenerAnuncio(request, response) {
-    try{
-        const anuncioId = request.params.id;
+async function obtenerAlerta(request, response) {
+    try {
+        const alertaId = request.params.id;
+        const condicion = {origen_punto: 'alerta'};
 
-        const anuncioEncontrado = await anuncio.findByPk(anuncioId);
+        const alertaEncontrada = await puntoMapa.findByPk(alertaId, {
+            where: condicion,
+            include: [
+                {
+                    model: comentarioAlerta,
+                    as: 'comentariosAlerta',
+                    order: [['fecha_emision', 'DESC']],
+                }
+            ]
+        });
 
-        if(!anuncioEncontrado){
-            return response.status(404).json({message: 'Anuncio no encontrado'});
+        if (!alertaEncontrada) {
+            return response.status(404).json({ message: 'Alerta no encontrada' });
         }
 
-        const anuncioFormateado = anuncioEncontrado.toJSON();
-        anuncioFormateado.fecha_emision = formatTime(anuncioFormateado.fecha_emision)
+        const alertaFormateada = alertaEncontrada.toJSON();
+        alertaFormateada.fecha_emision = formatTime(alertaFormateada.fecha_emision)
 
-        return response.status(200).json({anuncioEncontrado: anuncioFormateado});
-    } catch(error){
-        return response.status(500).json({error});
+        return response.status(200).json({ alertaEncontrada: alertaFormateada });
+    } catch (error) {
+        return response.status(500).json({ error: "Error al obtener alerta", detalle: error.message });
     }
 }
 
+
 /**
- * Obtiene la lista de todos los anuncios.
+ * Obtiene una lista de alertas filtradas por estado o si fueron atendidas.
  *
  * @param {Request} request - Objeto de solicitud HTTP.
  * @param {Response} response - Objeto de respuesta HTTP.
  * @returns {Promise&lt;void>}
  */
-async function obtenerAnuncios(request, response) {
-    try{
-        const anunciosEncontrados = await anuncio.findAll();
+async function obtenerAlertas(request, response) {
+    try {
+        const { estado, atendida } = request.query;
 
-        const anunciosFormateados = anunciosEncontrados.map(anuncio => {
-        const anuncioJson = anuncio.toJSON();
-        anuncioJson.fecha_emision = formatTime(anuncioJson.fecha_emision);
-        return anuncioJson;
+        const condicion = {origen_punto: 'alerta'};
+
+        if (estado !== undefined) {
+            condicion.estado_actividad = estado;
+        }
+
+        if (atendida !== undefined) {
+            condicion.estado_atendida = atendida;
+        }
+
+        const alertasEncontradas = await puntoMapa.findAll({
+            where: condicion,
+            order: [['fecha_emision', 'DESC']]
+        });
+
+        const alertasFormateadas = alertasEncontradas.map(alerta => {
+            const alertaJson = alerta.toJSON();
+            alertaJson.fecha_emision = formatTime(alertaJson.fecha_emision);
+            return alertaJson;
         });
         
-        return response.status(200).json({anunciosEncontrados: anunciosFormateados});
-    } catch(error){
-        return response.status(500).json({error});
+        return response.status(200).json({ alertasEncontradas: alertasFormateadas });
+    } catch (error) {
+        return response.status(500).json({ error: "Error al obtener alertas", detalle: error.message });
     }
 }
 
 /**
- * Elimina un anuncio por su ID}.
- *
+ * Desactiva una alerta marcando su estado como inactivo.
  * @param {Request} request - Objeto de solicitud HTTP.
  * @param {Response} response - Objeto de respuesta HTTP.
  * @returns {Promise&lt;void>}
  */
-async function eliminarAnuncio(request, response) {
-    try{
-        const anuncioId = request.params.id;
+async function desactivarAlerta(request, response) {
+    try {
+        const alertaId = request.params.id;
 
-        await anuncio.destroy({ where: { id_anuncio: anuncioId } });
-        return response.status(200).json({message: 'Anuncio eliminado'});
-    }catch(error){
-        return response.status(500).json({error});
+        const alertaActualizada = await puntoMapa.update(
+            { estado_actividad: 0 },
+            { where: { id_punto_mapa: alertaId } }
+        );
+
+        if (alertaActualizada[0] === 0) {
+            return response.status(404).json({ message: 'Alerta no encontrada o ya desactivada' });
+        }
+
+        return response.status(200).json({ message: 'Alerta desactivada correctamente' });
+    } catch (error) {
+        return response.status(500).json({ error: "Error al desactivar alerta", detalle: error.message });
     }
 }
 
-export { crearAnuncio, obtenerAnuncio, obtenerAnuncios, eliminarAnuncio };
-
-
-</code></pre>
+export { crearAlerta, obtenerAlerta, obtenerAlertas, desactivarAlerta };</code></pre>
         </article>
     </section>
 
