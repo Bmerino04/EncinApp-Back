@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/comentarioAlerta.controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/comentarioAlerta.controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import db from '../models/index.js';
+const { comentarioAlerta, puntoMapa } = db;
+import { formatTime } from '../utils/formatTime.js';
+
+/**
+ * @module controllers/comentarioAlertaController
+ */
+
+/**
+ * Crea un nuevo comentario.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+async function crearComentarioAlerta(request, response) {
+    try{
+        const usuarioId = request.user.id;
+        const alertaId = request.params.id;
+        const body = request.body;
+
+        const comentarioCreado = await comentarioAlerta.create({
+            contenido: body.contenido,
+            fecha_emision: body.fecha_emision,
+            id_usuario: usuarioId,
+            id_punto_mapa: alertaId,
+        });
+
+        const comentarioFormateado = comentarioCreado.toJSON();
+        comentarioFormateado.fecha_emision = formatTime(comentarioFormateado.fecha_emision)
+
+        return response.status(201).json({comentarioCreado: comentarioFormateado});
+    } catch(error){
+        return response.status(500).json({error: "Error al crear comentario", detalle: error.message });
+    }
+}
+
+/**
+ * Obtiene la lista de todos los comentarios.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+async function obtenerComentariosAlerta(request, response) {
+    try{
+        const alertaId = request.params.id;
+
+        const comentariosEncontrados = await comentarioAlerta.findAll({
+            where: {
+                id_punto_mapa: alertaId
+            },
+            include: {
+                model: puntoMapa,
+                as: 'puntoMapa',
+                where: {
+                    origen_punto: 'alerta'
+                },
+                attributes: [],
+            },
+            order: [['fecha_emision', 'DESC']],
+        });
+
+        
+        const comentariosFormateados = comentariosEncontrados.map(comentarioAlerta => {
+            const comentarioJSON = comentarioAlerta.toJSON();
+            comentarioJSON.fecha_emision = formatTime(comentarioJSON.fecha_emision);
+            return comentarioJSON;
+        });
+
+        return response.status(200).json({comentariosEncontrados: comentariosFormateados});
+    } catch(error){
+        return response.status(500).json({error: "Error al obtener comentarios", detalle: error.message });
+    }
+}
+
+/**
+ * Elimina un comentario por su ID.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+async function eliminarComentarioAlerta(request, response) {
+    try{
+        const alertaId = request.params.idAlerta;
+        const comentarioId = request.params.idComentario;
+
+        const comentarioEncontrado = await comentarioAlerta.findOne({
+            where: {
+                id_comentario: comentarioId,
+                id_punto_mapa: alertaId
+            }
+        });
+
+        if (!comentarioEncontrado) {
+            return response.status(404).json({message: 'Comentario no encontrado'});
+        }
+
+        await comentarioAlerta.destroy({where: { id_comentario: comentarioId, id_punto_mapa: alertaId }});
+        return response.status(200).json({message: 'Comentario eliminado'});
+    }catch(error){
+        return response.status(500).json({error: "Error al eliminar comentario", detalle: error.message });
+    }
+}
+
+export { crearComentarioAlerta, obtenerComentariosAlerta, eliminarComentarioAlerta };
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_alertaController.html">controllers/alertaController</a></li><li><a href="module-controllers_anuncioController.html">controllers/anuncioController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_comentarioAlertaController.html">controllers/comentarioAlertaController</a></li><li><a href="module-controllers_permisosController.html">controllers/permisosController</a></li><li><a href="module-controllers_puntoInteresController.html">controllers/puntoInteresController</a></li><li><a href="module-controllers_tokenDispositivoController.html">controllers/tokenDispositivoController</a></li><li><a href="module-controllers_usuarioController.html">controllers/usuarioController</a></li><li><a href="module-models_anuncio.html">models/anuncio</a></li><li><a href="module-models_comentarioAlerta.html">models/comentarioAlerta</a></li><li><a href="module-models_permiso.html">models/permiso</a></li><li><a href="module-models_puntoMapa.html">models/puntoMapa</a></li><li><a href="module-models_tokenDispositivo.html">models/tokenDispositivo</a></li><li><a href="module-models_usuario.html">models/usuario</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 02:32:48 GMT-0400 (hora estándar de Chile)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

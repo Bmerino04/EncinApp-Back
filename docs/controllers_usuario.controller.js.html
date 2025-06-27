@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/usuario.controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/usuario.controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import db from '../models/index.js';
+import bcrypt from 'bcryptjs';
+const { usuario } = db;
+
+/**
+ * @module controllers/usuarioController
+ */
+
+/**
+ * Crea un nuevo usuario.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+
+async function registrarUsuario(request, response) {
+    try{
+        const body = request.body;
+
+        const user = await usuario.findOne({ where: { rut: body.rut } });
+
+        if (user) {
+            return response.status(400).json({error: 'Rut ya registrado'});
+        }
+
+        const salt = await bcrypt.genSalt(10)
+        const pinEncriptado = await bcrypt.hash(body.pin, salt);
+
+        const usuarioCreado = await usuario.create({
+            nombre: body.nombre,
+            rut: body.rut,
+            pin: pinEncriptado,
+            es_presidente: false,
+            disponibilidad: body.disponibilidad ?? true,
+            direccion: body.direccion,
+        });
+
+        await usuarioCreado.setPermisos([]);
+        
+        return response.status(201).json({usuarioCreado});
+    } catch(error){
+        console.error('Error al registrar usuario:', error);
+        return response.status(500).json({error, detalle: error.message});
+    }
+}
+
+/**
+ * Obtiene un usuario por su ID.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+async function obtenerUsuario(request, response) {
+    try{
+        const usuarioId = request.params.id;
+
+        const usuarioEncontrado = await usuario.findByPk(usuarioId);
+
+        if(!usuarioEncontrado){
+            return response.status(404).json({message: 'Usuario no encontrado '});
+        }
+
+        return response.status(200).json({usuarioEncontrado});
+    } catch(error){
+        return response.status(500).json({error});
+    }
+}
+
+/**
+ * Obtiene la lista de todos los usuarios.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+async function obtenerUsuarios(request, response) {
+    try{
+        const usuariosEncontrados = await usuario.findAll();
+        return response.status(200).json({usuariosEncontrados});
+    } catch(error){
+        return response.status(500).json({error: "Error al obtener usuarios", detalle: error.message});
+    }
+}
+
+/**
+ * Actualiza un usuario por su ID.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+async function actualizarUsuario(request, response) {
+    try {
+        const usuarioId = request.params.id;
+        const updates = request.body;
+
+        const usuarioExistente = await usuario.findByPk(usuarioId);
+        if (!usuarioExistente) {
+            return response.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+        if (updates.es_presidente !== undefined) {
+            return response.status(403).json({ 
+                error: 'No tienes permiso para cambiar el estado de presidente de un usuario'}
+            );
+        }
+
+        if (updates.rut &amp;&amp; updates.rut !== usuarioExistente.rut) {
+            const usuarioConRut = await usuario.findOne({ where: { rut: updates.rut } });
+            if (usuarioConRut) {
+                return response.status(400).json({ error: 'El RUT ya está registrado para otro usuario' });
+            }
+        }
+
+        const updatedData = {};
+        if (updates.nombre) updatedData.nombre = updates.nombre;
+        if (updates.rut) updatedData.rut = updates.rut;
+        if (updates.disponibilidad !== undefined) updatedData.disponibilidad = updates.disponibilidad;
+        if (updates.direccion) updatedData.direccion = updates.direccion;
+
+        if (updates.pin) {
+            const salt = await bcrypt.genSalt(10);
+            updatedData.pin = await bcrypt.hash(updates.pin, salt);
+        }
+
+        await usuarioExistente.update(updatedData);
+        return response.status(200).json({ message: 'Usuario actualizado correctamente', usuario: usuarioExistente });
+    } catch (error) {
+        console.error('Error al actualizar usuario:', error);
+        return response.status(500).json({ error: 'Error al actualizar usuario', detalle: error.message });
+    }
+}
+
+/**
+ * Actualiza la disponibilidad de un usuario.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+async function actualizarDisponibilidad(request, response) {
+    try {
+        const usuarioId = request.params.id;
+
+        const usuarioExistente = await usuario.findByPk(usuarioId);
+        if (!usuarioExistente) {
+            return response.status(404).json({ message: 'Usuario no encontrado' });
+        }
+
+       // Obtener el valor actual antes de la actualización
+        const disponibilidadActual = usuarioExistente.disponibilidad;
+
+        await usuario.update(
+            { disponibilidad: !disponibilidadActual },
+            { where: { id_usuario: usuarioId } }
+        );
+
+        const usuarioActualizado = await usuario.findByPk(usuarioId);
+
+        return response.status(200).json({ 
+            message: usuarioActualizado.disponibilidad 
+                ? 'Usuario marcado como disponible' 
+                : 'Usuario marcado como no disponible',
+        });
+    } catch (error) {
+        return response.status(500).json({ error: 'Error al actualizar disponibilidad', detalle: error.message });
+    }
+
+}
+
+/**
+ * Elimina un usuario por su ID (soft delete).
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP..
+ * @returns {Promise&lt;void>}
+ */
+async function eliminarUsuario(request, response) {
+    try{
+        const usuarioId = request.params.id;
+
+        const usuarioExistente = await usuario.findByPk(usuarioId); // Sequelize ya usa la PK definida (id_usuario)
+
+        if (!usuarioExistente) {
+            return response.status(404).json({ message: 'Usuario no encontrado' });
+        }
+        await usuarioExistente.destroy(); // soft delete si paranoid está activo
+        return response.status(200).json({ message: 'Usuario eliminado correctamente' });
+    } catch (error) {
+        return response.status(500).json({ error: 'Error al eliminar usuario', detalle: error.message });
+    }
+}
+
+export { registrarUsuario, obtenerUsuario, obtenerUsuarios, actualizarUsuario, actualizarDisponibilidad, eliminarUsuario };</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_alertaController.html">controllers/alertaController</a></li><li><a href="module-controllers_anuncioController.html">controllers/anuncioController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_comentarioAlertaController.html">controllers/comentarioAlertaController</a></li><li><a href="module-controllers_permisosController.html">controllers/permisosController</a></li><li><a href="module-controllers_puntoInteresController.html">controllers/puntoInteresController</a></li><li><a href="module-controllers_tokenDispositivoController.html">controllers/tokenDispositivoController</a></li><li><a href="module-controllers_usuarioController.html">controllers/usuarioController</a></li><li><a href="module-models_anuncio.html">models/anuncio</a></li><li><a href="module-models_comentarioAlerta.html">models/comentarioAlerta</a></li><li><a href="module-models_permiso.html">models/permiso</a></li><li><a href="module-models_puntoMapa.html">models/puntoMapa</a></li><li><a href="module-models_tokenDispositivo.html">models/tokenDispositivo</a></li><li><a href="module-models_usuario.html">models/usuario</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 02:32:48 GMT-0400 (hora estándar de Chile)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

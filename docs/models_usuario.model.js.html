@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: models/usuario.model.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: models/usuario.model.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Modelo TokenDispositivo
+ * @module models/usuario
+ */
+
+/**
+ * Representa a un usuario del sistema, incluyendo sus datos personales,
+ * estado y relaciones con otros modelos.
+ *
+ * @param {Object} sequelize - Instancia de Sequelize.
+ * @param {Object} DataTypes - Tipos de datos de Sequelize.
+ * @returns {Object} Modelo Usuario.
+ */
+export default (sequelize, DataTypes) => {
+  const Usuario = sequelize.define(
+    'usuario',
+    {
+      /**
+       * ID del usuario (clave primaria, autoincremental).
+       * @type {number}
+       */
+      id_usuario: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        autoIncrement: true,
+        allowNull: false,
+      },
+
+      /**
+       * Nombre completo del usuario.
+       * @type {string}
+       */
+      nombre: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+
+      /**
+       * RUT del usuario (identificación única).
+       * @type {string}
+       */
+      rut: {
+        type: DataTypes.STRING(10),
+        allowNull: false,
+      },
+
+      /**
+       * PIN cifrado del usuario para autenticación.
+       * @type {string}
+       */
+      pin: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+
+      /**
+       * Indica si el usuario es presidente.
+       * @type {boolean}
+       */
+      es_presidente: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+
+      /**
+       * Disponibilidad del usuario (activo/inactivo).
+       * @type {boolean}
+       */
+      disponibilidad: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+
+      /**
+       * Dirección física del usuario.
+       * @type {string}
+       */
+      direccion: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+      },
+    },
+    {
+      /**
+       * Configuración de la tabla:
+       * - tableName: fuerza el nombre de la tabla a 'usuario'.
+       * - timestamps: desactivado (no guarda fechas de creación/modificación).
+       * - freezeTableName: evita pluralizar el nombre de la tabla.
+       * - paranoid: activo (uso de soft delete).
+       */
+      tableName: 'usuario',
+      timestamps: false,
+      freezeTableName: true,
+      paranoid: true,
+    }
+  );
+
+  /**
+   * Define las asociaciones del modelo Usuario con otros modelos.
+   *
+   * @param {Object} models - Los modelos disponibles para asociar.
+   */
+  Usuario.associate = models => {
+    Usuario.hasMany(models.puntoMapa, {
+      foreignKey: 'id_usuario',
+      as: 'puntosMapa',
+    });
+    Usuario.hasMany(models.comentarioAlerta, {
+      foreignKey: 'id_usuario',
+      as: 'comentariosAlerta',
+    });
+    Usuario.hasMany(models.anuncio, {
+      foreignKey: 'id_usuario',
+      as: 'anuncios',
+    });
+
+  Usuario.belongsToMany(models.permiso, { 
+    through: 'usuario_permiso',
+    foreignKey: 'id_usuario',
+    otherKey: 'id_permiso',
+    as: 'permisos'
+  });
+};
+return Usuario;
+}</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_alertaController.html">controllers/alertaController</a></li><li><a href="module-controllers_anuncioController.html">controllers/anuncioController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_comentarioAlertaController.html">controllers/comentarioAlertaController</a></li><li><a href="module-controllers_permisosController.html">controllers/permisosController</a></li><li><a href="module-controllers_puntoInteresController.html">controllers/puntoInteresController</a></li><li><a href="module-controllers_tokenDispositivoController.html">controllers/tokenDispositivoController</a></li><li><a href="module-controllers_usuarioController.html">controllers/usuarioController</a></li><li><a href="module-models_anuncio.html">models/anuncio</a></li><li><a href="module-models_comentarioAlerta.html">models/comentarioAlerta</a></li><li><a href="module-models_permiso.html">models/permiso</a></li><li><a href="module-models_puntoMapa.html">models/puntoMapa</a></li><li><a href="module-models_tokenDispositivo.html">models/tokenDispositivo</a></li><li><a href="module-models_usuario.html">models/usuario</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 02:32:48 GMT-0400 (hora estándar de Chile)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

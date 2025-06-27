@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: controllers/anuncio.controller.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: controllers/anuncio.controller.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import db from '../models/index.js';
+const { anuncio } = db;
+import { formatTime } from '../utils/formatTime.js';
+
+/**
+ * @module controllers/anuncioController
+ */
+
+/**
+ * Crea un nuevo anuncio.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+async function crearAnuncio(request, response) {
+    try{
+
+        const body = request.body;
+        const usuarioId = request.user.id;
+
+        const anuncioCreado = await anuncio.create({
+            titulo: body.titulo,
+            cuerpo: body.cuerpo,
+            multimedia_url: body.multimedia_url,
+            tipo_multimedia: body.tipo_multimedia,
+            fecha_relacionada: body.fecha_relacionada,
+            direccion: body.direccion,
+            id_usuario: usuarioId,
+        });
+
+        const anuncioFormateado = anuncioCreado.toJSON();
+        anuncioFormateado.fecha_emision = formatTime(anuncioFormateado.fecha_emision)
+
+        return response.status(201).json({anuncioCreado: anuncioFormateado});
+    } catch(error){
+        return response.status(500).json({error});
+    }
+}
+
+/**
+ * Obtiene un anuncio por su ID.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+async function obtenerAnuncio(request, response) {
+    try{
+        const anuncioId = request.params.id;
+
+        const anuncioEncontrado = await anuncio.findByPk(anuncioId);
+
+        if(!anuncioEncontrado){
+            return response.status(404).json({message: 'Anuncio no encontrado'});
+        }
+
+        const anuncioFormateado = anuncioEncontrado.toJSON();
+        anuncioFormateado.fecha_emision = formatTime(anuncioFormateado.fecha_emision)
+
+        return response.status(200).json({anuncioEncontrado: anuncioFormateado});
+    } catch(error){
+        return response.status(500).json({error});
+    }
+}
+
+/**
+ * Obtiene la lista de todos los anuncios.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+async function obtenerAnuncios(request, response) {
+    try{
+        const anunciosEncontrados = await anuncio.findAll();
+
+        const anunciosFormateados = anunciosEncontrados.map(anuncio => {
+        const anuncioJson = anuncio.toJSON();
+        anuncioJson.fecha_emision = formatTime(anuncioJson.fecha_emision);
+        return anuncioJson;
+        });
+        
+        return response.status(200).json({anunciosEncontrados: anunciosFormateados});
+    } catch(error){
+        return response.status(500).json({error});
+    }
+}
+
+/**
+ * Elimina un anuncio por su ID}.
+ *
+ * @param {Request} request - Objeto de solicitud HTTP.
+ * @param {Response} response - Objeto de respuesta HTTP.
+ * @returns {Promise&lt;void>}
+ */
+async function eliminarAnuncio(request, response) {
+    try{
+        const anuncioId = request.params.id;
+
+        await anuncio.destroy({ where: { id_anuncio: anuncioId } });
+        return response.status(200).json({message: 'Anuncio eliminado'});
+    }catch(error){
+        return response.status(500).json({error});
+    }
+}
+
+export { crearAnuncio, obtenerAnuncio, obtenerAnuncios, eliminarAnuncio };
+
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-controllers_alertaController.html">controllers/alertaController</a></li><li><a href="module-controllers_anuncioController.html">controllers/anuncioController</a></li><li><a href="module-controllers_authController.html">controllers/authController</a></li><li><a href="module-controllers_comentarioAlertaController.html">controllers/comentarioAlertaController</a></li><li><a href="module-controllers_permisosController.html">controllers/permisosController</a></li><li><a href="module-controllers_puntoInteresController.html">controllers/puntoInteresController</a></li><li><a href="module-controllers_tokenDispositivoController.html">controllers/tokenDispositivoController</a></li><li><a href="module-controllers_usuarioController.html">controllers/usuarioController</a></li><li><a href="module-models_anuncio.html">models/anuncio</a></li><li><a href="module-models_comentarioAlerta.html">models/comentarioAlerta</a></li><li><a href="module-models_permiso.html">models/permiso</a></li><li><a href="module-models_puntoMapa.html">models/puntoMapa</a></li><li><a href="module-models_tokenDispositivo.html">models/tokenDispositivo</a></li><li><a href="module-models_usuario.html">models/usuario</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.4</a> on Fri Jun 27 2025 02:32:48 GMT-0400 (hora estándar de Chile)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
