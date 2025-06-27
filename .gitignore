@@ -21,3 +21,4 @@ docker-compose.override.yml
 
 # Firebase
 .secrets/
+firebase-key.json
